@@ -1,0 +1,17 @@
+{
+  "name": "calm-tools",
+  "short_name": "calm",
+  "description": "心を落ち着けるためのウェルネスツール",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#667eea",
+  "theme_color": "#667eea",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
