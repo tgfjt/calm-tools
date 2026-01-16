@@ -94,7 +94,6 @@ const styles = {
     color: '#5a5a5a',
   }),
   btn: css({
-    width: '100%',
     padding: '16px 32px',
     fontSize: '1.1rem',
     border: 'none',
@@ -108,6 +107,9 @@ const styles = {
       transform: 'translateY(-2px)',
       boxShadow: '0 6px 20px rgba(0, 0, 0, 0.08)',
     },
+  }),
+  btnFull: css({
+    width: '100%',
   }),
   btnPrimary: css({
     background: 'linear-gradient(135deg, #ffd6e0, #e8d9f5)',
@@ -419,10 +421,10 @@ export default function GroundingApp() {
                 今この瞬間に意識を向けましょう。
               </p>
             </div>
-            <button class={`${styles.btn} ${styles.btnPrimary}`} onClick={startSession}>
+            <button class={`${styles.btn} ${styles.btnFull} ${styles.btnPrimary}`} onClick={startSession}>
               はじめる
             </button>
-            <button class={`${styles.btn} ${styles.btnSecondary}`} onClick={() => (screen.value = 'history')}>
+            <button class={`${styles.btn} ${styles.btnFull} ${styles.btnSecondary}`} onClick={() => (screen.value = 'history')}>
               履歴を見る
             </button>
           </div>
@@ -478,7 +480,7 @@ export default function GroundingApp() {
                 今この瞬間に、<br />
                 あなたはしっかりとつながっています。
               </p>
-              <button class={`${styles.btn} ${styles.btnPrimary}`} onClick={() => (screen.value = 'start')}>
+              <button class={`${styles.btn} ${styles.btnFull} ${styles.btnPrimary}`} onClick={() => (screen.value = 'start')}>
                 おわる
               </button>
             </div>
@@ -526,7 +528,7 @@ export default function GroundingApp() {
                 ))
               )}
             </div>
-            <button class={`${styles.btn} ${styles.btnSecondary}`} onClick={() => (screen.value = 'start')}>
+            <button class={`${styles.btn} ${styles.btnFull} ${styles.btnSecondary}`} onClick={() => (screen.value = 'start')}>
               戻る
             </button>
           </div>

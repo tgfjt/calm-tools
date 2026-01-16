@@ -153,6 +153,7 @@ const styles = {
     minHeight: '2rem',
     color: '#aed581',
     marginTop: '0.5rem',
+    whiteSpace: 'nowrap',
   }),
   timer: css({
     fontSize: '1rem',
