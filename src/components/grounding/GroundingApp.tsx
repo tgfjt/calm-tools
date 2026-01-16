@@ -1,5 +1,6 @@
 import { useSignal } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
+import { css } from '../../../styled-system/css';
 import {
   initDB,
   saveGroundingSession,
@@ -49,6 +50,241 @@ const steps = [
     placeholder: () => '例）お茶の味、口の中のやさしい味...',
   },
 ];
+
+const styles = {
+  container: css({
+    maxWidth: '600px',
+    width: '100%',
+    padding: '20px',
+  }),
+  header: css({
+    textAlign: 'center',
+    marginBottom: '30px',
+  }),
+  title: css({
+    fontSize: '2.5rem',
+    color: '#5a5a5a',
+    marginBottom: '10px',
+    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.08)',
+  }),
+  subtitle: css({
+    fontSize: '1.1rem',
+    color: '#8a8a8a',
+    fontWeight: 300,
+  }),
+  main: css({
+    background: '#fef9f3',
+    borderRadius: '30px',
+    padding: '40px',
+    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
+    position: 'relative',
+    overflow: 'hidden',
+  }),
+  sheepWelcome: css({
+    textAlign: 'center',
+    marginBottom: '40px',
+  }),
+  sheep: css({
+    fontSize: '6rem',
+    marginBottom: '20px',
+  }),
+  welcomeText: css({
+    fontSize: '1.2rem',
+    lineHeight: 2,
+    color: '#5a5a5a',
+  }),
+  btn: css({
+    width: '100%',
+    padding: '16px 32px',
+    fontSize: '1.1rem',
+    border: 'none',
+    borderRadius: '50px',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    fontWeight: 500,
+    marginBottom: '15px',
+    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
+    _hover: {
+      transform: 'translateY(-2px)',
+      boxShadow: '0 6px 20px rgba(0, 0, 0, 0.08)',
+    },
+  }),
+  btnPrimary: css({
+    background: 'linear-gradient(135deg, #ffd6e0, #e8d9f5)',
+    color: '#5a5a5a',
+  }),
+  btnSecondary: css({
+    background: 'white',
+    color: '#5a5a5a',
+    _hover: {
+      background: '#f8f9fa',
+    },
+  }),
+  progressBar: css({
+    width: '100%',
+    height: '8px',
+    background: 'rgba(255, 255, 255, 0.6)',
+    borderRadius: '10px',
+    marginBottom: '30px',
+    overflow: 'hidden',
+  }),
+  progressFill: css({
+    height: '100%',
+    background: 'linear-gradient(90deg, #ffd6e0, #e8d9f5)',
+    borderRadius: '10px',
+    transition: 'width 0.5s ease',
+  }),
+  stepContent: css({
+    textAlign: 'center',
+  }),
+  stepSheep: css({
+    fontSize: '4rem',
+    marginBottom: '20px',
+  }),
+  stepTitle: css({
+    fontSize: '1.8rem',
+    marginBottom: '15px',
+    color: '#5a5a5a',
+  }),
+  instruction: css({
+    fontSize: '1.1rem',
+    marginBottom: '30px',
+    color: '#8a8a8a',
+    lineHeight: 1.8,
+  }),
+  inputContainer: css({
+    marginBottom: '30px',
+  }),
+  inputItem: css({
+    marginBottom: '15px',
+  }),
+  input: css({
+    width: '100%',
+    padding: '12px 20px',
+    border: '2px solid rgba(255, 255, 255, 0.8)',
+    borderRadius: '20px',
+    fontSize: '1rem',
+    background: 'white',
+    color: '#5a5a5a',
+    transition: 'all 0.3s ease',
+    _focus: {
+      outline: 'none',
+      borderColor: '#e8d9f5',
+      boxShadow: '0 0 0 3px rgba(232, 217, 245, 0.3)',
+    },
+    _placeholder: {
+      color: '#8a8a8a',
+    },
+  }),
+  validationError: css({
+    background: 'rgba(231, 76, 60, 0.1)',
+    color: '#c0392b',
+    padding: '12px 16px',
+    borderRadius: '12px',
+    marginTop: '10px',
+    fontSize: '0.9rem',
+    textAlign: 'center',
+  }),
+  buttonGroup: css({
+    display: 'flex',
+    gap: '15px',
+  }),
+  buttonGroupBtn: css({
+    flex: 1,
+    marginBottom: 0,
+  }),
+  completeContent: css({
+    textAlign: 'center',
+  }),
+  sheepCelebrate: css({
+    fontSize: '6rem',
+    marginBottom: '20px',
+  }),
+  completeTitle: css({
+    fontSize: '2rem',
+    marginBottom: '20px',
+    color: '#5a5a5a',
+  }),
+  completeMessage: css({
+    fontSize: '1.2rem',
+    lineHeight: 2,
+    marginBottom: '40px',
+    color: '#5a5a5a',
+  }),
+  historyTitle: css({
+    textAlign: 'center',
+    marginBottom: '30px',
+    fontSize: '1.8rem',
+    color: '#5a5a5a',
+  }),
+  historyList: css({
+    maxHeight: '400px',
+    overflowY: 'auto',
+    marginBottom: '30px',
+  }),
+  historyItem: css({
+    background: 'white',
+    borderRadius: '20px',
+    padding: '20px',
+    marginBottom: '15px',
+    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
+    transition: 'all 0.2s ease',
+    _hover: {
+      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
+      borderLeft: '3px solid #e8d9f5',
+    },
+  }),
+  historyHeader: css({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '10px',
+  }),
+  historyDate: css({
+    fontSize: '0.9rem',
+    color: '#8a8a8a',
+  }),
+  deleteBtn: css({
+    background: 'none',
+    border: 'none',
+    fontSize: '1.2rem',
+    color: '#8a8a8a',
+    cursor: 'pointer',
+    padding: '4px 8px',
+    borderRadius: '50%',
+    transition: 'all 0.2s ease',
+    opacity: 0,
+    _hover: {
+      background: 'rgba(255, 100, 100, 0.2)',
+      color: '#e74c3c',
+    },
+  }),
+  historySummary: css({
+    fontSize: '0.95rem',
+    color: '#5a5a5a',
+    lineHeight: 1.6,
+  }),
+  historyCategory: css({
+    display: 'inline-block',
+    padding: '4px 12px',
+    borderRadius: '12px',
+    fontSize: '0.85rem',
+    marginRight: '8px',
+    marginTop: '8px',
+    background: '#d4e4f7',
+    color: '#5a5a5a',
+  }),
+  emptyHistory: css({
+    textAlign: 'center',
+    padding: '40px',
+    color: '#8a8a8a',
+  }),
+  emptySheep: css({
+    fontSize: '4rem',
+    marginBottom: '15px',
+    opacity: 0.5,
+  }),
+};
 
 export default function GroundingApp() {
   const screen = useSignal<Screen>('start');
@@ -166,27 +402,27 @@ export default function GroundingApp() {
   };
 
   return (
-    <div class="grounding-container">
-      <header>
-        <h1>54321</h1>
-        <p class="subtitle">グラウンディング</p>
+    <div class={styles.container}>
+      <header class={styles.header}>
+        <h1 class={styles.title}>54321</h1>
+        <p class={styles.subtitle}>グラウンディング</p>
       </header>
 
-      <main>
+      <main class={styles.main}>
         {/* スタート画面 */}
         {screen.value === 'start' && (
-          <div class="screen active">
-            <div class="sheep-welcome">
-              <div class="sheep">🐑</div>
-              <p class="welcome-text">
+          <div class="screen">
+            <div class={styles.sheepWelcome}>
+              <div class={`${styles.sheep} sheep`}>🐑</div>
+              <p class={styles.welcomeText}>
                 深呼吸をして、<br />
                 今この瞬間に意識を向けましょう。
               </p>
             </div>
-            <button class="btn btn-primary" onClick={startSession}>
+            <button class={`${styles.btn} ${styles.btnPrimary}`} onClick={startSession}>
               はじめる
             </button>
-            <button class="btn btn-secondary" onClick={() => (screen.value = 'history')}>
+            <button class={`${styles.btn} ${styles.btnSecondary}`} onClick={() => (screen.value = 'history')}>
               履歴を見る
             </button>
           </div>
@@ -194,19 +430,20 @@ export default function GroundingApp() {
 
         {/* ステップ画面 */}
         {screen.value === 'step' && (
-          <div class="screen active">
-            <div class="progress-bar">
-              <div class="progress-fill" style={{ width: `${progress}%` }} />
+          <div class="screen">
+            <div class={styles.progressBar}>
+              <div class={styles.progressFill} style={{ width: `${progress}%` }} />
             </div>
-            <div class="step-content">
-              <div class="sheep">🐑</div>
-              <h2 id="step-title">{step.title}</h2>
-              <p class="instruction">{step.instruction}</p>
-              <div class="input-container">
+            <div class={styles.stepContent}>
+              <div class={`${styles.stepSheep} sheep`}>🐑</div>
+              <h2 class={styles.stepTitle}>{step.title}</h2>
+              <p class={styles.instruction}>{step.instruction}</p>
+              <div class={styles.inputContainer}>
                 {Array.from({ length: step.count }).map((_, i) => (
-                  <div class="input-item" key={i}>
+                  <div class={styles.inputItem} key={i}>
                     <input
                       type="text"
+                      class={styles.input}
                       placeholder={step.placeholder(i + 1)}
                       ref={(el) => {
                         if (el) inputRefs.current[i] = el;
@@ -216,14 +453,14 @@ export default function GroundingApp() {
                   </div>
                 ))}
                 {validationError.value && (
-                  <div class="validation-error">{validationError.value}</div>
+                  <div class={`${styles.validationError} validation-error`}>{validationError.value}</div>
                 )}
               </div>
-              <div class="button-group">
-                <button class="btn btn-secondary" onClick={cancelSession}>
+              <div class={styles.buttonGroup}>
+                <button class={`${styles.btn} ${styles.btnSecondary} ${styles.buttonGroupBtn}`} onClick={cancelSession}>
                   やめる
                 </button>
-                <button class="btn btn-primary" onClick={nextStep}>
+                <button class={`${styles.btn} ${styles.btnPrimary} ${styles.buttonGroupBtn}`} onClick={nextStep}>
                   次へ
                 </button>
               </div>
@@ -233,15 +470,15 @@ export default function GroundingApp() {
 
         {/* 完了画面 */}
         {screen.value === 'complete' && (
-          <div class="screen active">
-            <div class="complete-content">
-              <div class="sheep-celebrate">🐑</div>
-              <h2>おつかれさまでした</h2>
-              <p class="complete-message">
+          <div class="screen">
+            <div class={styles.completeContent}>
+              <div class={`${styles.sheepCelebrate} sheep-celebrate`}>🐑</div>
+              <h2 class={styles.completeTitle}>おつかれさまでした</h2>
+              <p class={styles.completeMessage}>
                 今この瞬間に、<br />
                 あなたはしっかりとつながっています。
               </p>
-              <button class="btn btn-primary" onClick={() => (screen.value = 'start')}>
+              <button class={`${styles.btn} ${styles.btnPrimary}`} onClick={() => (screen.value = 'start')}>
                 おわる
               </button>
             </div>
@@ -250,12 +487,12 @@ export default function GroundingApp() {
 
         {/* 履歴画面 */}
         {screen.value === 'history' && (
-          <div class="screen active">
-            <h2>履歴</h2>
-            <div class="history-list">
+          <div class="screen">
+            <h2 class={styles.historyTitle}>履歴</h2>
+            <div class={styles.historyList}>
               {history.value.length === 0 ? (
-                <div class="empty-history">
-                  <div class="sheep">🐑</div>
+                <div class={styles.emptyHistory}>
+                  <div class={`${styles.emptySheep} sheep`}>🐑</div>
                   <p>
                     まだ記録がありません。
                     <br />
@@ -264,22 +501,22 @@ export default function GroundingApp() {
                 </div>
               ) : (
                 history.value.map((session) => (
-                  <div class="history-item" key={session.id}>
-                    <div class="history-header">
-                      <div class="history-date">🌙 {formatDate(session.timestamp)}</div>
+                  <div class={styles.historyItem} key={session.id}>
+                    <div class={styles.historyHeader}>
+                      <div class={styles.historyDate}>🌙 {formatDate(session.timestamp)}</div>
                       <button
-                        class="delete-btn"
+                        class={styles.deleteBtn}
                         onClick={() => session.id && handleDeleteSession(session.id)}
                         title="削除"
                       >
                         ×
                       </button>
                     </div>
-                    <div class="history-summary">
+                    <div class={styles.historySummary}>
                       {session.responses.map((response) => {
                         const filled = response.data.filter((d) => d.length > 0);
                         return filled.length > 0 ? (
-                          <div class="history-category" key={response.step}>
+                          <div class={styles.historyCategory} key={response.step}>
                             {response.title}
                           </div>
                         ) : null;
@@ -289,7 +526,7 @@ export default function GroundingApp() {
                 ))
               )}
             </div>
-            <button class="btn btn-secondary" onClick={() => (screen.value = 'start')}>
+            <button class={`${styles.btn} ${styles.btnSecondary}`} onClick={() => (screen.value = 'start')}>
               戻る
             </button>
           </div>
