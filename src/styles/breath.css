@@ -18,11 +18,45 @@
 }
 
 .pattern-selection {
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
   display: flex;
   gap: 1rem;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.duration-selection {
+  margin-bottom: 2rem;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.duration-btn {
+  background: rgba(139, 195, 74, 0.1);
+  border: 1px solid rgba(165, 214, 167, 0.2);
+  color: #c5e1a5;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.duration-btn:hover:not(:disabled) {
+  opacity: 1;
+  background: rgba(139, 195, 74, 0.2);
+}
+
+.duration-btn.selected {
+  opacity: 1;
+  background: rgba(139, 195, 74, 0.25);
+  border-color: rgba(165, 214, 167, 0.5);
+}
+
+.duration-btn:disabled {
+  cursor: not-allowed;
 }
 
 .pattern-btn {

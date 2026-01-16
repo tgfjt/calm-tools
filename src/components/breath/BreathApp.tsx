@@ -9,14 +9,22 @@ import {
 
 type Pattern = '555' | '478';
 type Phase = 'idle' | 'inhale' | 'hold' | 'exhale' | 'complete';
+type Duration = 60 | 180 | 300;
 
 const patterns = {
   '555': { inhale: 5, hold: 5, exhale: 5, name: '5-5-5', desc: 'バランス型\nリフレッシュに' },
   '478': { inhale: 4, hold: 7, exhale: 8, name: '4-7-8', desc: '鎮静型\n就寝前に' },
 };
 
+const durations: { value: Duration; label: string }[] = [
+  { value: 60, label: '1分' },
+  { value: 180, label: '3分' },
+  { value: 300, label: '5分' },
+];
+
 export default function BreathApp() {
   const selectedPattern = useSignal<Pattern>('555');
+  const selectedDuration = useSignal<Duration>(60);
   const phase = useSignal<Phase>('idle');
   const phaseCountdown = useSignal(0);
   const remainingTime = useSignal(60);
@@ -142,7 +150,7 @@ export default function BreathApp() {
     await saveBreathSession({
       timestamp: new Date().toISOString(),
       completed: true,
-      duration: 60,
+      duration: selectedDuration.value,
       pattern: selectedPattern.value,
     });
     await loadHistory();
@@ -155,7 +163,7 @@ export default function BreathApp() {
       await saveBreathSession({
         timestamp: new Date().toISOString(),
         completed: false,
-        duration: 60 - remainingTime.value,
+        duration: selectedDuration.value - remainingTime.value,
         pattern: selectedPattern.value,
       });
       await loadHistory();
@@ -164,8 +172,14 @@ export default function BreathApp() {
     clearAllTimers();
     isRunning.value = false;
     phase.value = 'idle';
-    remainingTime.value = 60;
+    remainingTime.value = selectedDuration.value;
     phaseCountdown.value = 0;
+  };
+
+  const selectDuration = (d: Duration) => {
+    if (isRunning.value) return;
+    selectedDuration.value = d;
+    remainingTime.value = d;
   };
 
   const selectPattern = (p: Pattern) => {
@@ -197,6 +211,19 @@ export default function BreathApp() {
           >
             <div class="pattern-name">{patterns[p].name}</div>
             <div class="pattern-desc">{patterns[p].desc}</div>
+          </button>
+        ))}
+      </div>
+
+      <div class="duration-selection">
+        {durations.map((d) => (
+          <button
+            key={d.value}
+            class={`duration-btn ${selectedDuration.value === d.value ? 'selected' : ''}`}
+            onClick={() => selectDuration(d.value)}
+            disabled={isRunning.value}
+          >
+            {d.label}
           </button>
         ))}
       </div>
