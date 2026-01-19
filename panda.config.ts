@@ -1,7 +1,22 @@
-import { defineConfig } from "@pandacss/dev";
+import { defineConfig, defineGlobalStyles } from "@pandacss/dev";
+
+const globalCss = defineGlobalStyles({
+  a: {
+    color: 'inherit',
+    textDecoration: 'none',
+  },
+  button: {
+    fontFamily: 'inherit',
+    cursor: 'pointer',
+  },
+  'input, textarea': {
+    fontFamily: 'inherit',
+  },
+});
 
 export default defineConfig({
   preflight: true,
+  globalCss,
   include: ["./src/**/*.{js,jsx,ts,tsx,astro}"],
   exclude: [],
   jsxFramework: "preact",
