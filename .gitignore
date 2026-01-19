@@ -23,6 +23,5 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 
-## Panda
-styled-system
-styled-system-studiostyled-system
+# claude code local settings
+.claude/settings.local.json
