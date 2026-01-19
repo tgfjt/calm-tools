@@ -77,7 +77,7 @@ const styles = {
     background: token('colors.grounding.bg'),
     borderRadius: '30px',
     padding: '40px',
-    boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
+    boxShadow: token('shadows.card'),
     position: 'relative',
     overflow: 'hidden',
   }),
@@ -103,10 +103,10 @@ const styles = {
     transition: 'all 0.3s ease',
     fontWeight: 500,
     marginBottom: '15px',
-    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
+    boxShadow: token('shadows.btn'),
     _hover: {
       transform: 'translateY(-2px)',
-      boxShadow: '0 6px 20px rgba(0, 0, 0, 0.08)',
+      boxShadow: token('shadows.cardHover'),
     },
   }),
   btnFull: css({
@@ -126,7 +126,7 @@ const styles = {
   progressBar: css({
     width: '100%',
     height: '8px',
-    background: 'rgba(255, 255, 255, 0.6)',
+    background: token('colors.grounding.progressBg'),
     borderRadius: '10px',
     marginBottom: '30px',
     overflow: 'hidden',
@@ -164,7 +164,7 @@ const styles = {
   input: css({
     width: '100%',
     padding: '12px 20px',
-    border: '2px solid rgba(255, 255, 255, 0.8)',
+    border: `2px solid ${token('colors.grounding.borderWhiteMax')}`,
     borderRadius: '20px',
     fontSize: '1rem',
     background: 'white',
@@ -230,10 +230,10 @@ const styles = {
     borderRadius: '20px',
     padding: '20px',
     marginBottom: '15px',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.08)',
+    boxShadow: token('shadows.softMedium'),
     transition: 'all 0.2s ease',
     _hover: {
-      boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
+      boxShadow: token('shadows.softStrong'),
       borderLeft: `3px solid ${token('colors.grounding.purple')}`,
     },
   }),
