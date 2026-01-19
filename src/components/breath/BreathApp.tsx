@@ -1,6 +1,7 @@
 import { useSignal, useComputed } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
 import { css } from '../../../styled-system/css';
+import { token } from '../../../styled-system/tokens';
 import {
   initDB,
   saveBreathSession,
@@ -37,7 +38,7 @@ const styles = {
     marginBottom: '2rem',
     letterSpacing: '0.3em',
     opacity: 0.9,
-    color: '#c5e1a5',
+    color: token('colors.breath.muted'),
   }),
   patternSelection: css({
     marginBottom: '1.5rem',
@@ -47,9 +48,9 @@ const styles = {
     flexWrap: 'wrap',
   }),
   patternBtn: css({
-    background: 'rgba(139, 195, 74, 0.15)',
-    border: '2px solid rgba(165, 214, 167, 0.3)',
-    color: '#c5e1a5',
+    background: token('colors.breath.surfaceHover'),
+    border: `2px solid ${token('colors.breath.border')}`,
+    color: token('colors.breath.muted'),
     padding: '1.2rem 1.5rem',
     borderRadius: '16px',
     cursor: 'pointer',
@@ -57,8 +58,8 @@ const styles = {
     backdropFilter: 'blur(10px)',
     minWidth: '160px',
     _hover: {
-      background: 'rgba(139, 195, 74, 0.25)',
-      borderColor: 'rgba(165, 214, 167, 0.5)',
+      background: token('colors.breath.surfaceStrong'),
+      borderColor: token('colors.breath.borderStrong'),
       transform: 'translateY(-2px)',
     },
     _disabled: {
@@ -67,9 +68,9 @@ const styles = {
     },
   }),
   patternBtnSelected: css({
-    background: 'rgba(139, 195, 74, 0.3)',
-    borderColor: 'rgba(165, 214, 167, 0.6)',
-    boxShadow: '0 0 20px rgba(139, 195, 74, 0.3)',
+    background: token('colors.breath.surfaceStronger'),
+    borderColor: token('colors.breath.borderStronger'),
+    boxShadow: `0 0 20px ${token('colors.breath.glow')}`,
   }),
   patternName: css({
     fontSize: '1.2rem',
@@ -91,9 +92,9 @@ const styles = {
     justifyContent: 'center',
   }),
   durationBtn: css({
-    background: 'rgba(139, 195, 74, 0.1)',
-    border: '1px solid rgba(165, 214, 167, 0.2)',
-    color: '#c5e1a5',
+    background: token('colors.breath.surface'),
+    border: `1px solid ${token('colors.breath.borderWeak')}`,
+    color: token('colors.breath.muted'),
     padding: '0.5rem 1rem',
     borderRadius: '20px',
     cursor: 'pointer',
@@ -102,7 +103,7 @@ const styles = {
     opacity: 0.7,
     _hover: {
       opacity: 1,
-      background: 'rgba(139, 195, 74, 0.2)',
+      background: token('colors.breath.surfaceMedium'),
     },
     _disabled: {
       cursor: 'not-allowed',
@@ -110,8 +111,8 @@ const styles = {
   }),
   durationBtnSelected: css({
     opacity: 1,
-    background: 'rgba(139, 195, 74, 0.25)',
-    borderColor: 'rgba(165, 214, 167, 0.5)',
+    background: token('colors.breath.surfaceStrong'),
+    borderColor: token('colors.breath.borderStrong'),
   }),
   breathCircle: css({
     width: '280px',
@@ -123,9 +124,9 @@ const styles = {
     width: '100%',
     height: '100%',
     borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(139, 195, 74, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%)',
-    border: '2px solid rgba(165, 214, 167, 0.3)',
-    boxShadow: '0 0 40px rgba(139, 195, 74, 0.2), inset 0 0 60px rgba(139, 195, 74, 0.1)',
+    background: token('gradients.breathCircle'),
+    border: `2px solid ${token('colors.breath.border')}`,
+    boxShadow: `0 0 40px ${token('colors.breath.glowWeak')}, inset 0 0 60px ${token('colors.breath.surface')}`,
     transition: 'all 0.3s ease',
   }),
   circleContent: css({
@@ -143,7 +144,7 @@ const styles = {
     fontSize: '4rem',
     fontWeight: 200,
     lineHeight: 1,
-    color: '#c5e1a5',
+    color: token('colors.breath.muted'),
     minHeight: '4.5rem',
   }),
   instruction: css({
@@ -151,7 +152,7 @@ const styles = {
     fontWeight: 300,
     letterSpacing: '0.2em',
     minHeight: '2rem',
-    color: '#aed581',
+    color: token('colors.breath.accentLight'),
     marginTop: '0.5rem',
     whiteSpace: 'nowrap',
   }),
@@ -160,7 +161,7 @@ const styles = {
     fontWeight: 300,
     marginBottom: '2rem',
     fontVariantNumeric: 'tabular-nums',
-    color: '#c5e1a5',
+    color: token('colors.breath.muted'),
     opacity: 0.6,
   }),
   controls: css({
@@ -170,9 +171,9 @@ const styles = {
     marginBottom: '3rem',
   }),
   controlBtn: css({
-    background: 'rgba(139, 195, 74, 0.2)',
-    border: '1px solid rgba(165, 214, 167, 0.4)',
-    color: '#c5e1a5',
+    background: token('colors.breath.surfaceMedium'),
+    border: `1px solid ${token('colors.breath.borderMedium')}`,
+    color: token('colors.breath.muted'),
     padding: '1rem 2.5rem',
     fontSize: '1rem',
     borderRadius: '30px',
@@ -180,8 +181,8 @@ const styles = {
     letterSpacing: '0.1em',
     backdropFilter: 'blur(10px)',
     _hover: {
-      background: 'rgba(139, 195, 74, 0.3)',
-      boxShadow: '0 0 20px rgba(139, 195, 74, 0.3)',
+      background: token('colors.breath.surfaceStronger'),
+      boxShadow: `0 0 20px ${token('colors.breath.glow')}`,
       transform: 'translateY(-2px)',
     },
     _disabled: {
@@ -192,7 +193,7 @@ const styles = {
   history: css({
     marginTop: '3rem',
     paddingTop: '2rem',
-    borderTop: '1px solid rgba(165, 214, 167, 0.2)',
+    borderTop: `1px solid ${token('colors.breath.borderWeak')}`,
   }),
   historyTitle: css({
     fontSize: '1.2rem',
@@ -200,12 +201,12 @@ const styles = {
     marginBottom: '1.5rem',
     letterSpacing: '0.2em',
     opacity: 0.8,
-    color: '#c5e1a5',
+    color: token('colors.breath.muted'),
   }),
   stats: css({
     fontSize: '0.9rem',
     opacity: 0.7,
-    color: '#dcedc8',
+    color: token('colors.breath.textAlt'),
     marginBottom: '1rem',
   }),
   historyList: css({
@@ -217,15 +218,15 @@ const styles = {
     padding: '0 1rem',
   }),
   historyItem: css({
-    background: 'rgba(139, 195, 74, 0.1)',
+    background: token('colors.breath.surface'),
     padding: '0.8rem 1.2rem',
     borderRadius: '12px',
     fontSize: '0.9rem',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    border: '1px solid rgba(165, 214, 167, 0.15)',
-    color: '#dcedc8',
+    border: `1px solid ${token('colors.breath.borderWeaker')}`,
+    color: token('colors.breath.textAlt'),
   }),
   historyDate: css({
     opacity: 0.7,

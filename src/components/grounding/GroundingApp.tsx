@@ -1,6 +1,7 @@
 import { useSignal } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
 import { css } from '../../../styled-system/css';
+import { token } from '../../../styled-system/tokens';
 import {
   initDB,
   saveGroundingSession,
@@ -63,17 +64,17 @@ const styles = {
   }),
   title: css({
     fontSize: '2.5rem',
-    color: '#5a5a5a',
+    color: token('colors.grounding.text'),
     marginBottom: '10px',
     textShadow: '2px 2px 4px rgba(0, 0, 0, 0.08)',
   }),
   subtitle: css({
     fontSize: '1.1rem',
-    color: '#8a8a8a',
+    color: token('colors.grounding.textLight'),
     fontWeight: 300,
   }),
   main: css({
-    background: '#fef9f3',
+    background: token('colors.grounding.bg'),
     borderRadius: '30px',
     padding: '40px',
     boxShadow: '0 10px 40px rgba(0, 0, 0, 0.08)',
@@ -91,7 +92,7 @@ const styles = {
   welcomeText: css({
     fontSize: '1.2rem',
     lineHeight: 2,
-    color: '#5a5a5a',
+    color: token('colors.grounding.text'),
   }),
   btn: css({
     padding: '16px 32px',
@@ -112,14 +113,14 @@ const styles = {
     width: '100%',
   }),
   btnPrimary: css({
-    background: 'linear-gradient(135deg, #ffd6e0, #e8d9f5)',
-    color: '#5a5a5a',
+    background: token('gradients.groundingBtn'),
+    color: token('colors.grounding.text'),
   }),
   btnSecondary: css({
     background: 'white',
-    color: '#5a5a5a',
+    color: token('colors.grounding.text'),
     _hover: {
-      background: '#f8f9fa',
+      background: token('colors.grounding.hoverBg'),
     },
   }),
   progressBar: css({
@@ -132,7 +133,7 @@ const styles = {
   }),
   progressFill: css({
     height: '100%',
-    background: 'linear-gradient(90deg, #ffd6e0, #e8d9f5)',
+    background: token('gradients.groundingProgress'),
     borderRadius: '10px',
     transition: 'width 0.5s ease',
   }),
@@ -146,12 +147,12 @@ const styles = {
   stepTitle: css({
     fontSize: '1.8rem',
     marginBottom: '15px',
-    color: '#5a5a5a',
+    color: token('colors.grounding.text'),
   }),
   instruction: css({
     fontSize: '1.1rem',
     marginBottom: '30px',
-    color: '#8a8a8a',
+    color: token('colors.grounding.textLight'),
     lineHeight: 1.8,
   }),
   inputContainer: css({
@@ -167,20 +168,20 @@ const styles = {
     borderRadius: '20px',
     fontSize: '1rem',
     background: 'white',
-    color: '#5a5a5a',
+    color: token('colors.grounding.text'),
     transition: 'all 0.3s ease',
     _focus: {
       outline: 'none',
-      borderColor: '#e8d9f5',
-      boxShadow: '0 0 0 3px rgba(232, 217, 245, 0.3)',
+      borderColor: token('colors.grounding.purple'),
+      boxShadow: `0 0 0 3px ${token('colors.grounding.purpleAlpha')}`,
     },
     _placeholder: {
-      color: '#8a8a8a',
+      color: token('colors.grounding.textLight'),
     },
   }),
   validationError: css({
-    background: 'rgba(231, 76, 60, 0.1)',
-    color: '#c0392b',
+    background: token('colors.error.bg'),
+    color: token('colors.error.text'),
     padding: '12px 16px',
     borderRadius: '12px',
     marginTop: '10px',
@@ -205,19 +206,19 @@ const styles = {
   completeTitle: css({
     fontSize: '2rem',
     marginBottom: '20px',
-    color: '#5a5a5a',
+    color: token('colors.grounding.text'),
   }),
   completeMessage: css({
     fontSize: '1.2rem',
     lineHeight: 2,
     marginBottom: '40px',
-    color: '#5a5a5a',
+    color: token('colors.grounding.text'),
   }),
   historyTitle: css({
     textAlign: 'center',
     marginBottom: '30px',
     fontSize: '1.8rem',
-    color: '#5a5a5a',
+    color: token('colors.grounding.text'),
   }),
   historyList: css({
     maxHeight: '400px',
@@ -233,7 +234,7 @@ const styles = {
     transition: 'all 0.2s ease',
     _hover: {
       boxShadow: '0 4px 15px rgba(0, 0, 0, 0.08)',
-      borderLeft: '3px solid #e8d9f5',
+      borderLeft: `3px solid ${token('colors.grounding.purple')}`,
     },
   }),
   historyHeader: css({
@@ -244,26 +245,26 @@ const styles = {
   }),
   historyDate: css({
     fontSize: '0.9rem',
-    color: '#8a8a8a',
+    color: token('colors.grounding.textLight'),
   }),
   deleteBtn: css({
     background: 'none',
     border: 'none',
     fontSize: '1.2rem',
-    color: '#8a8a8a',
+    color: token('colors.grounding.textLight'),
     cursor: 'pointer',
     padding: '4px 8px',
     borderRadius: '50%',
     transition: 'all 0.2s ease',
     opacity: 0,
     _hover: {
-      background: 'rgba(255, 100, 100, 0.2)',
-      color: '#e74c3c',
+      background: token('colors.error.hoverBg'),
+      color: token('colors.error.accent'),
     },
   }),
   historySummary: css({
     fontSize: '0.95rem',
-    color: '#5a5a5a',
+    color: token('colors.grounding.text'),
     lineHeight: 1.6,
   }),
   historyCategory: css({
@@ -273,13 +274,13 @@ const styles = {
     fontSize: '0.85rem',
     marginRight: '8px',
     marginTop: '8px',
-    background: '#d4e4f7',
-    color: '#5a5a5a',
+    background: token('colors.grounding.blue'),
+    color: token('colors.grounding.text'),
   }),
   emptyHistory: css({
     textAlign: 'center',
     padding: '40px',
-    color: '#8a8a8a',
+    color: token('colors.grounding.textLight'),
   }),
   emptySheep: css({
     fontSize: '4rem',
