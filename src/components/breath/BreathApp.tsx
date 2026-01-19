@@ -1,5 +1,6 @@
 import { useSignal, useComputed } from '@preact/signals';
 import { useEffect, useRef } from 'preact/hooks';
+import { css } from '../../../styled-system/css';
 import {
   initDB,
   saveBreathSession,
@@ -22,6 +23,216 @@ const durations: { value: Duration; label: string }[] = [
   { value: 300, label: '5分' },
 ];
 
+const styles = {
+  container: css({
+    textAlign: 'center',
+    zIndex: 1,
+    padding: '2rem',
+    maxWidth: '600px',
+    width: '100%',
+  }),
+  title: css({
+    fontSize: '1.8rem',
+    fontWeight: 300,
+    marginBottom: '2rem',
+    letterSpacing: '0.3em',
+    opacity: 0.9,
+    color: '#c5e1a5',
+  }),
+  patternSelection: css({
+    marginBottom: '1.5rem',
+    display: 'flex',
+    gap: '1rem',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+  }),
+  patternBtn: css({
+    background: 'rgba(139, 195, 74, 0.15)',
+    border: '2px solid rgba(165, 214, 167, 0.3)',
+    color: '#c5e1a5',
+    padding: '1.2rem 1.5rem',
+    borderRadius: '16px',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    backdropFilter: 'blur(10px)',
+    minWidth: '160px',
+    _hover: {
+      background: 'rgba(139, 195, 74, 0.25)',
+      borderColor: 'rgba(165, 214, 167, 0.5)',
+      transform: 'translateY(-2px)',
+    },
+    _disabled: {
+      opacity: 0.6,
+      cursor: 'not-allowed',
+    },
+  }),
+  patternBtnSelected: css({
+    background: 'rgba(139, 195, 74, 0.3)',
+    borderColor: 'rgba(165, 214, 167, 0.6)',
+    boxShadow: '0 0 20px rgba(139, 195, 74, 0.3)',
+  }),
+  patternName: css({
+    fontSize: '1.2rem',
+    fontWeight: 400,
+    letterSpacing: '0.15em',
+    marginBottom: '0.5rem',
+  }),
+  patternDesc: css({
+    fontSize: '0.85rem',
+    opacity: 0.7,
+    letterSpacing: '0.05em',
+    lineHeight: 1.4,
+    whiteSpace: 'pre-line',
+  }),
+  durationSelection: css({
+    marginBottom: '2rem',
+    display: 'flex',
+    gap: '0.5rem',
+    justifyContent: 'center',
+  }),
+  durationBtn: css({
+    background: 'rgba(139, 195, 74, 0.1)',
+    border: '1px solid rgba(165, 214, 167, 0.2)',
+    color: '#c5e1a5',
+    padding: '0.5rem 1rem',
+    borderRadius: '20px',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    fontSize: '0.9rem',
+    opacity: 0.7,
+    _hover: {
+      opacity: 1,
+      background: 'rgba(139, 195, 74, 0.2)',
+    },
+    _disabled: {
+      cursor: 'not-allowed',
+    },
+  }),
+  durationBtnSelected: css({
+    opacity: 1,
+    background: 'rgba(139, 195, 74, 0.25)',
+    borderColor: 'rgba(165, 214, 167, 0.5)',
+  }),
+  breathCircle: css({
+    width: '280px',
+    height: '280px',
+    margin: '0 auto 3rem',
+    position: 'relative',
+  }),
+  circle: css({
+    width: '100%',
+    height: '100%',
+    borderRadius: '50%',
+    background: 'radial-gradient(circle, rgba(139, 195, 74, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%)',
+    border: '2px solid rgba(165, 214, 167, 0.3)',
+    boxShadow: '0 0 40px rgba(139, 195, 74, 0.2), inset 0 0 60px rgba(139, 195, 74, 0.1)',
+    transition: 'all 0.3s ease',
+  }),
+  circleContent: css({
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    pointerEvents: 'none',
+  }),
+  phaseCountdown: css({
+    fontSize: '4rem',
+    fontWeight: 200,
+    lineHeight: 1,
+    color: '#c5e1a5',
+    minHeight: '4.5rem',
+  }),
+  instruction: css({
+    fontSize: '1.5rem',
+    fontWeight: 300,
+    letterSpacing: '0.2em',
+    minHeight: '2rem',
+    color: '#aed581',
+    marginTop: '0.5rem',
+    whiteSpace: 'nowrap',
+  }),
+  timer: css({
+    fontSize: '1rem',
+    fontWeight: 300,
+    marginBottom: '2rem',
+    fontVariantNumeric: 'tabular-nums',
+    color: '#c5e1a5',
+    opacity: 0.6,
+  }),
+  controls: css({
+    display: 'flex',
+    gap: '1.5rem',
+    justifyContent: 'center',
+    marginBottom: '3rem',
+  }),
+  controlBtn: css({
+    background: 'rgba(139, 195, 74, 0.2)',
+    border: '1px solid rgba(165, 214, 167, 0.4)',
+    color: '#c5e1a5',
+    padding: '1rem 2.5rem',
+    fontSize: '1rem',
+    borderRadius: '30px',
+    transition: 'all 0.3s ease',
+    letterSpacing: '0.1em',
+    backdropFilter: 'blur(10px)',
+    _hover: {
+      background: 'rgba(139, 195, 74, 0.3)',
+      boxShadow: '0 0 20px rgba(139, 195, 74, 0.3)',
+      transform: 'translateY(-2px)',
+    },
+    _disabled: {
+      opacity: 0.4,
+      cursor: 'not-allowed',
+    },
+  }),
+  history: css({
+    marginTop: '3rem',
+    paddingTop: '2rem',
+    borderTop: '1px solid rgba(165, 214, 167, 0.2)',
+  }),
+  historyTitle: css({
+    fontSize: '1.2rem',
+    fontWeight: 300,
+    marginBottom: '1.5rem',
+    letterSpacing: '0.2em',
+    opacity: 0.8,
+    color: '#c5e1a5',
+  }),
+  stats: css({
+    fontSize: '0.9rem',
+    opacity: 0.7,
+    color: '#dcedc8',
+    marginBottom: '1rem',
+  }),
+  historyList: css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '0.8rem',
+    maxHeight: '200px',
+    overflowY: 'auto',
+    padding: '0 1rem',
+  }),
+  historyItem: css({
+    background: 'rgba(139, 195, 74, 0.1)',
+    padding: '0.8rem 1.2rem',
+    borderRadius: '12px',
+    fontSize: '0.9rem',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    border: '1px solid rgba(165, 214, 167, 0.15)',
+    color: '#dcedc8',
+  }),
+  historyDate: css({
+    opacity: 0.7,
+    fontSize: '0.85rem',
+  }),
+};
+
 export default function BreathApp() {
   const selectedPattern = useSignal<Pattern>('555');
   const selectedDuration = useSignal<Duration>(60);
@@ -34,8 +245,6 @@ export default function BreathApp() {
   const timerRef = useRef<number | null>(null);
   const phaseTimerRef = useRef<number | null>(null);
   const cycleTimeoutRef = useRef<number | null>(null);
-
-  const pattern = useComputed(() => patterns[selectedPattern.value]);
 
   const circleClass = useComputed(() => {
     if (phase.value === 'idle' || phase.value === 'complete') return '';
@@ -102,19 +311,16 @@ export default function BreathApp() {
 
     const p = patterns[selectedPattern.value];
 
-    // 吸う
     phase.value = 'inhale';
     startPhaseCountdown(p.inhale);
 
     cycleTimeoutRef.current = window.setTimeout(() => {
       if (!isRunning.value) return;
-      // 止める
       phase.value = 'hold';
       startPhaseCountdown(p.hold);
 
       cycleTimeoutRef.current = window.setTimeout(() => {
         if (!isRunning.value) return;
-        // 吐く
         phase.value = 'exhale';
         startPhaseCountdown(p.exhale);
 
@@ -198,28 +404,28 @@ export default function BreathApp() {
   );
 
   return (
-    <div class="breath-container">
-      <h1>深呼吸</h1>
+    <div class={styles.container}>
+      <h1 class={styles.title}>深呼吸</h1>
 
-      <div class="pattern-selection">
+      <div class={styles.patternSelection}>
         {(['555', '478'] as Pattern[]).map((p) => (
           <button
             key={p}
-            class={`pattern-btn ${selectedPattern.value === p ? 'selected' : ''}`}
+            class={`${styles.patternBtn} ${selectedPattern.value === p ? styles.patternBtnSelected : ''}`}
             onClick={() => selectPattern(p)}
             disabled={isRunning.value}
           >
-            <div class="pattern-name">{patterns[p].name}</div>
-            <div class="pattern-desc">{patterns[p].desc}</div>
+            <div class={styles.patternName}>{patterns[p].name}</div>
+            <div class={styles.patternDesc}>{patterns[p].desc}</div>
           </button>
         ))}
       </div>
 
-      <div class="duration-selection">
+      <div class={styles.durationSelection}>
         {durations.map((d) => (
           <button
             key={d.value}
-            class={`duration-btn ${selectedDuration.value === d.value ? 'selected' : ''}`}
+            class={`${styles.durationBtn} ${selectedDuration.value === d.value ? styles.durationBtnSelected : ''}`}
             onClick={() => selectDuration(d.value)}
             disabled={isRunning.value}
           >
@@ -228,44 +434,44 @@ export default function BreathApp() {
         ))}
       </div>
 
-      <div class="breath-circle">
-        <div class={`circle ${circleClass.value}`} />
-        <div class="circle-content">
-          <div class="phase-countdown">
+      <div class={styles.breathCircle}>
+        <div class={`${styles.circle} circle ${circleClass.value}`} />
+        <div class={styles.circleContent}>
+          <div class={styles.phaseCountdown}>
             {phaseCountdown.value > 0 ? phaseCountdown.value : ''}
           </div>
-          <div class="instruction">{instruction.value}</div>
+          <div class={styles.instruction}>{instruction.value}</div>
         </div>
       </div>
 
-      <div class="timer">{formatTime(remainingTime.value)}</div>
+      <div class={styles.timer}>{formatTime(remainingTime.value)}</div>
 
-      <div class="controls">
-        <button onClick={start} disabled={isRunning.value}>
+      <div class={styles.controls}>
+        <button class={styles.controlBtn} onClick={start} disabled={isRunning.value}>
           開始
         </button>
-        <button onClick={reset} disabled={!isRunning.value && phase.value === 'idle'}>
+        <button class={styles.controlBtn} onClick={reset} disabled={!isRunning.value && phase.value === 'idle'}>
           リセット
         </button>
       </div>
 
-      <div class="history">
-        <h2>履歴</h2>
-        <div class="stats">
+      <div class={styles.history}>
+        <h2 class={styles.historyTitle}>履歴</h2>
+        <div class={styles.stats}>
           {history.value.length === 0
             ? 'まだ記録がありません'
             : `合計 ${history.value.length} 回 / 完了 ${completedCount.value} 回`}
         </div>
-        <div class="history-list">
+        <div class={styles.historyList}>
           {history.value.slice(0, 10).map((session) => {
             const date = new Date(session.timestamp);
             const dateStr = `${date.getMonth() + 1}/${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
             return (
-              <div class="history-item" key={session.id}>
+              <div class={styles.historyItem} key={session.id}>
                 <span>
                   {session.completed ? '✓ 完了' : '中断'} ({session.pattern})
                 </span>
-                <span class="history-date">{dateStr}</span>
+                <span class={styles.historyDate}>{dateStr}</span>
               </div>
             );
           })}
