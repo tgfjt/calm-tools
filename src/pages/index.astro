@@ -46,21 +46,21 @@ const styles = {
     },
   }),
   cardBreath: css({
-    background: 'rgba(139, 195, 74, 0.2)',
-    border: '2px solid rgba(165, 214, 167, 0.4)',
+    background: token('colors.breath.surfaceMedium'),
+    border: `2px solid ${token('colors.breath.borderMedium')}`,
     color: token('colors.breath.text'),
     _hover: {
-      background: 'rgba(139, 195, 74, 0.3)',
-      boxShadow: '0 8px 32px rgba(139, 195, 74, 0.3)',
+      background: token('colors.breath.surfaceStronger'),
+      boxShadow: `0 8px 32px ${token('colors.breath.glow')}`,
     },
   }),
   cardGrounding: css({
-    background: 'rgba(255, 255, 255, 0.2)',
-    border: '2px solid rgba(255, 255, 255, 0.4)',
+    background: token('colors.grounding.surfaceWhite'),
+    border: `2px solid ${token('colors.grounding.borderWhite')}`,
     color: 'white',
     _hover: {
-      background: 'rgba(255, 255, 255, 0.3)',
-      boxShadow: '0 8px 32px rgba(255, 255, 255, 0.2)',
+      background: token('colors.grounding.surfaceWhiteMedium'),
+      boxShadow: `0 8px 32px ${token('colors.grounding.surfaceWhite')}`,
     },
   }),
   cardIcon: css({
