@@ -1,25 +1,109 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { css } from '../../styled-system/css';
+import { token } from '../../styled-system/tokens';
+
+const styles = {
+  container: css({
+    textAlign: 'center',
+    padding: '2rem',
+    maxWidth: '600px',
+    width: '100%',
+  }),
+  title: css({
+    fontSize: '2.5rem',
+    fontWeight: 300,
+    letterSpacing: '0.2em',
+    marginBottom: '0.5rem',
+    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)',
+  }),
+  tagline: css({
+    fontSize: '1.1rem',
+    opacity: 0.8,
+    marginBottom: '3rem',
+    letterSpacing: '0.1em',
+  }),
+  cardGrid: css({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '1.5rem',
+    sm: {
+      flexDirection: 'row',
+    },
+  }),
+  card: css({
+    display: 'block',
+    padding: '2rem',
+    borderRadius: '24px',
+    textDecoration: 'none',
+    transition: 'all 0.3s ease',
+    backdropFilter: 'blur(10px)',
+    sm: {
+      flex: 1,
+    },
+    _hover: {
+      transform: 'translateY(-4px)',
+    },
+  }),
+  cardBreath: css({
+    background: 'rgba(139, 195, 74, 0.2)',
+    border: '2px solid rgba(165, 214, 167, 0.4)',
+    color: token('colors.breath.text'),
+    _hover: {
+      background: 'rgba(139, 195, 74, 0.3)',
+      boxShadow: '0 8px 32px rgba(139, 195, 74, 0.3)',
+    },
+  }),
+  cardGrounding: css({
+    background: 'rgba(255, 255, 255, 0.2)',
+    border: '2px solid rgba(255, 255, 255, 0.4)',
+    color: 'white',
+    _hover: {
+      background: 'rgba(255, 255, 255, 0.3)',
+      boxShadow: '0 8px 32px rgba(255, 255, 255, 0.2)',
+    },
+  }),
+  cardIcon: css({
+    fontSize: '3rem',
+    marginBottom: '1rem',
+  }),
+  cardTitle: css({
+    fontSize: '1.5rem',
+    fontWeight: 400,
+    letterSpacing: '0.15em',
+    marginBottom: '0.5rem',
+  }),
+  cardDesc: css({
+    fontSize: '1rem',
+    opacity: 0.8,
+    marginBottom: '0.5rem',
+  }),
+  cardPatterns: css({
+    fontSize: '0.85rem',
+    opacity: 0.6,
+    letterSpacing: '0.05em',
+  }),
+};
 ---
 
 <Layout title="calm" theme="home">
-  <div class="home-container">
-    <h1>calm</h1>
-    <p class="tagline">心を落ち着けるためのツール</p>
+  <div class={styles.container}>
+    <h1 class={styles.title}>calm</h1>
+    <p class={styles.tagline}>心を落ち着けるためのツール</p>
 
-    <div class="card-grid">
-      <a href="/breath" class="card card-breath">
-        <div class="card-icon">🌿</div>
-        <h2>深呼吸</h2>
-        <p>1分間の呼吸エクササイズ</p>
-        <span class="card-patterns">5-5-5 / 4-7-8</span>
+    <div class={styles.cardGrid}>
+      <a href="/breath" class={`${styles.card} ${styles.cardBreath}`}>
+        <div class={styles.cardIcon}>🌿</div>
+        <h2 class={styles.cardTitle}>深呼吸</h2>
+        <p class={styles.cardDesc}>1分間の呼吸エクササイズ</p>
+        <span class={styles.cardPatterns}>5-5-5 / 4-7-8</span>
       </a>
 
-      <a href="/grounding" class="card card-grounding">
-        <div class="card-icon">🐑</div>
-        <h2>54321</h2>
-        <p>グラウンディング</p>
-        <span class="card-patterns">5つの感覚を使って</span>
+      <a href="/grounding" class={`${styles.card} ${styles.cardGrounding}`}>
+        <div class={styles.cardIcon}>🐑</div>
+        <h2 class={styles.cardTitle}>54321</h2>
+        <p class={styles.cardDesc}>グラウンディング</p>
+        <span class={styles.cardPatterns}>5つの感覚を使って</span>
       </a>
     </div>
   </div>

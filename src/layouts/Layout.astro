@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import { css } from '../../styled-system/css';
+import { token } from '../../styled-system/tokens';
 
 interface Props {
   title: string;
@@ -7,6 +9,84 @@ interface Props {
 }
 
 const { title, theme = 'home' } = Astro.props;
+
+const bodyStyles = {
+  home: css({
+    fontFamily: token('fonts.body'),
+    minHeight: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    background: token('gradients.home'),
+    color: 'white',
+  }),
+  breath: css({
+    fontFamily: token('fonts.body'),
+    minHeight: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    background: token('gradients.breath'),
+    color: token('colors.breath.text'),
+  }),
+  grounding: css({
+    fontFamily: token('fonts.body'),
+    minHeight: '100vh',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    background: token('gradients.grounding'),
+    color: token('colors.grounding.text'),
+  }),
+};
+
+const homeBtnStyles = {
+  breath: css({
+    position: 'fixed',
+    top: '1rem',
+    left: '1rem',
+    width: '44px',
+    height: '44px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%',
+    transition: 'all 0.3s ease',
+    backdropFilter: 'blur(10px)',
+    zIndex: 100,
+    background: 'rgba(139, 195, 74, 0.15)',
+    border: '1px solid rgba(165, 214, 167, 0.3)',
+    color: token('colors.breath.muted'),
+    _hover: {
+      background: 'rgba(139, 195, 74, 0.3)',
+      boxShadow: '0 0 20px rgba(139, 195, 74, 0.3)',
+      transform: 'scale(1.05)',
+    },
+  }),
+  grounding: css({
+    position: 'fixed',
+    top: '1rem',
+    left: '1rem',
+    width: '44px',
+    height: '44px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: '50%',
+    transition: 'all 0.3s ease',
+    backdropFilter: 'blur(10px)',
+    zIndex: 100,
+    background: 'rgba(255, 255, 255, 0.5)',
+    border: '1px solid rgba(255, 255, 255, 0.6)',
+    color: token('colors.grounding.textLight'),
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
+    _hover: {
+      background: 'rgba(255, 255, 255, 0.8)',
+      color: token('colors.grounding.text'),
+      transform: 'scale(1.05)',
+    },
+  }),
+};
 ---
 
 <!DOCTYPE html>
@@ -22,9 +102,9 @@ const { title, theme = 'home' } = Astro.props;
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="/favicon.svg">
 </head>
-<body data-theme={theme}>
+<body class={bodyStyles[theme]}>
   {theme !== 'home' && (
-    <a href="/" class="home-btn" aria-label="ホームへ戻る">
+    <a href="/" class={homeBtnStyles[theme]} aria-label="ホームへ戻る">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
         <polyline points="9 22 9 12 15 12 15 22"/>

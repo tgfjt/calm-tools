@@ -1,4 +1,4 @@
-/* グラウンディング アニメーション - Panda CSSでは定義できないため残す */
+/* Grounding animations - keyframes cannot be defined in Panda CSS */
 
 @keyframes fadeIn {
   from {

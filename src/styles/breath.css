@@ -1,6 +1,5 @@
-/* 呼吸アニメーション - Panda CSSでは定義できないため残す */
+/* Breath animations - keyframes cannot be defined in Panda CSS */
 
-/* 5-5-5 アニメーション */
 .circle.breathing-in {
   animation: breatheIn 5s ease-in-out forwards;
 }
@@ -13,7 +12,6 @@
   animation: breatheOut 5s ease-in-out forwards;
 }
 
-/* 4-7-8 アニメーション */
 .circle.breathing-in-478 {
   animation: breatheIn478 4s ease-in-out forwards;
 }
