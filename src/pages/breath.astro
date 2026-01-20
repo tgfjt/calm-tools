@@ -2,10 +2,15 @@
 import Layout from '../layouts/Layout.astro';
 import BreathApp from '../components/breath/BreathApp';
 import '../styles/breath.css';
+import { detectLocaleFromHeader, getTranslations } from '../i18n';
+
+const acceptLanguage = Astro.request.headers.get('accept-language');
+const locale = detectLocaleFromHeader(acceptLanguage);
+const i18n = getTranslations(locale);
 ---
 
-<Layout title="深呼吸" theme="breath">
-  <BreathApp client:load />
+<Layout title={i18n.breath.title} theme="breath">
+  <BreathApp client:load locale={locale} />
 </Layout>
 
 <style>

@@ -8,21 +8,22 @@ import {
   getBreathSessions,
   type BreathSession,
 } from '../../lib/db';
+import { getTranslations, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
 
 type Pattern = '555' | '478';
 type Phase = 'idle' | 'inhale' | 'hold' | 'exhale' | 'complete';
 type Duration = 60 | 180 | 300;
 
-const patterns = {
-  '555': { inhale: 5, hold: 5, exhale: 5, name: '5-5-5', desc: 'バランス型\nリフレッシュに' },
-  '478': { inhale: 4, hold: 7, exhale: 8, name: '4-7-8', desc: '鎮静型\n就寝前に' },
+const patternConfigs = {
+  '555': { inhale: 5, hold: 5, exhale: 5 },
+  '478': { inhale: 4, hold: 7, exhale: 8 },
 };
 
-const durations: { value: Duration; label: string }[] = [
-  { value: 60, label: '1分' },
-  { value: 180, label: '3分' },
-  { value: 300, label: '5分' },
-];
+const durationValues: Duration[] = [60, 180, 300];
 
 const styles = {
   container: css({
@@ -234,7 +235,9 @@ const styles = {
   }),
 };
 
-export default function BreathApp() {
+export default function BreathApp({ locale }: Props) {
+  const i18n = getTranslations(locale);
+
   const selectedPattern = useSignal<Pattern>('555');
   const selectedDuration = useSignal<Duration>(60);
   const phase = useSignal<Phase>('idle');
@@ -259,14 +262,7 @@ export default function BreathApp() {
   });
 
   const instruction = useComputed(() => {
-    const map: Record<Phase, string> = {
-      idle: '準備ができたら開始',
-      inhale: '吸って',
-      hold: '止めて',
-      exhale: '吐いて',
-      complete: '完了しました',
-    };
-    return map[phase.value];
+    return i18n.breath.phases[phase.value];
   });
 
   useEffect(() => {
@@ -310,7 +306,7 @@ export default function BreathApp() {
   const runBreathingCycle = () => {
     if (!isRunning.value) return;
 
-    const p = patterns[selectedPattern.value];
+    const p = patternConfigs[selectedPattern.value];
 
     phase.value = 'inhale';
     startPhaseCountdown(p.inhale);
@@ -397,7 +393,7 @@ export default function BreathApp() {
   const formatTime = (seconds: number) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
-    return `残り ${m}:${String(s).padStart(2, '0')}`;
+    return `${i18n.breath.remaining} ${m}:${String(s).padStart(2, '0')}`;
   };
 
   const completedCount = useComputed(
@@ -406,7 +402,7 @@ export default function BreathApp() {
 
   return (
     <div class={styles.container}>
-      <h1 class={styles.title}>深呼吸</h1>
+      <h1 class={styles.title}>{i18n.breath.title}</h1>
 
       <div class={styles.patternSelection}>
         {(['555', '478'] as Pattern[]).map((p) => (
@@ -416,21 +412,21 @@ export default function BreathApp() {
             onClick={() => selectPattern(p)}
             disabled={isRunning.value}
           >
-            <div class={styles.patternName}>{patterns[p].name}</div>
-            <div class={styles.patternDesc}>{patterns[p].desc}</div>
+            <div class={styles.patternName}>{i18n.breath.patterns[p].name}</div>
+            <div class={styles.patternDesc}>{i18n.breath.patterns[p].desc}</div>
           </button>
         ))}
       </div>
 
       <div class={styles.durationSelection}>
-        {durations.map((d) => (
+        {durationValues.map((d) => (
           <button
-            key={d.value}
-            class={`${styles.durationBtn} ${selectedDuration.value === d.value ? styles.durationBtnSelected : ''}`}
-            onClick={() => selectDuration(d.value)}
+            key={d}
+            class={`${styles.durationBtn} ${selectedDuration.value === d ? styles.durationBtnSelected : ''}`}
+            onClick={() => selectDuration(d)}
             disabled={isRunning.value}
           >
-            {d.label}
+            {i18n.breath.durations[String(d) as '60' | '180' | '300']}
           </button>
         ))}
       </div>
@@ -449,19 +445,21 @@ export default function BreathApp() {
 
       <div class={styles.controls}>
         <button class={styles.controlBtn} onClick={start} disabled={isRunning.value}>
-          開始
+          {i18n.breath.start}
         </button>
         <button class={styles.controlBtn} onClick={reset} disabled={!isRunning.value && phase.value === 'idle'}>
-          リセット
+          {i18n.breath.reset}
         </button>
       </div>
 
       <div class={styles.history}>
-        <h2 class={styles.historyTitle}>履歴</h2>
+        <h2 class={styles.historyTitle}>{i18n.breath.history}</h2>
         <div class={styles.stats}>
           {history.value.length === 0
-            ? 'まだ記録がありません'
-            : `合計 ${history.value.length} 回 / 完了 ${completedCount.value} 回`}
+            ? i18n.breath.noRecords
+            : i18n.breath.stats
+                .replace('{total}', String(history.value.length))
+                .replace('{completed}', String(completedCount.value))}
         </div>
         <div class={styles.historyList}>
           {history.value.slice(0, 10).map((session) => {
@@ -470,7 +468,7 @@ export default function BreathApp() {
             return (
               <div class={styles.historyItem} key={session.id}>
                 <span>
-                  {session.completed ? '✓ 完了' : '中断'} ({session.pattern})
+                  {session.completed ? `✓ ${i18n.breath.completed}` : i18n.breath.interrupted} ({session.pattern})
                 </span>
                 <span class={styles.historyDate}>{dateStr}</span>
               </div>

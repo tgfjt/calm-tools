@@ -11,45 +11,21 @@ import {
   type GroundingStepResponse,
 } from '../../lib/db';
 import { stepResponseSchema } from '../../lib/schemas';
+import { getTranslations, type Locale } from '../../i18n';
+
+interface Props {
+  locale: Locale;
+}
 
 type Screen = 'start' | 'step' | 'complete' | 'history';
+type StepCategory = 'sight' | 'touch' | 'sound' | 'smell' | 'taste';
 
-const steps = [
-  {
-    title: '見えるもの 5つ',
-    instruction: 'いま、目に見えるものを5つ、ゆっくり見つけてください。',
-    count: 5,
-    category: 'sight',
-    placeholder: (i: number) => (i === 1 ? '例）やわらかい雲、青い空...' : `${i}つ目`),
-  },
-  {
-    title: '触れるもの 4つ',
-    instruction: 'まわりにあって、触れることができるものを4つ見つけてください。',
-    count: 4,
-    category: 'touch',
-    placeholder: (i: number) => (i === 1 ? '例）つめたい机、ふわふわのクッション...' : `${i}つ目`),
-  },
-  {
-    title: '聞こえるもの 3つ',
-    instruction: '耳をすませて、いま聞こえる音を3つ見つけてください。',
-    count: 3,
-    category: 'sound',
-    placeholder: (i: number) => (i === 1 ? '例）鳥のさえずり、風の音...' : `${i}つ目`),
-  },
-  {
-    title: '匂うもの 2つ',
-    instruction: 'まわりの匂いに意識を向けて、2つ見つけてください。',
-    count: 2,
-    category: 'smell',
-    placeholder: (i: number) => (i === 1 ? '例）コーヒーの香り、草の匂い...' : `${i}つ目`),
-  },
-  {
-    title: '味わうもの 1つ',
-    instruction: 'いま、口の中で感じられる味を1つ見つけてください。',
-    count: 1,
-    category: 'taste',
-    placeholder: () => '例）お茶の味、口の中のやさしい味...',
-  },
+const stepConfigs: { count: number; category: StepCategory }[] = [
+  { count: 5, category: 'sight' },
+  { count: 4, category: 'touch' },
+  { count: 3, category: 'sound' },
+  { count: 2, category: 'smell' },
+  { count: 1, category: 'taste' },
 ];
 
 const styles = {
@@ -289,7 +265,9 @@ const styles = {
   }),
 };
 
-export default function GroundingApp() {
+export default function GroundingApp({ locale }: Props) {
+  const i18n = getTranslations(locale);
+
   const screen = useSignal<Screen>('start');
   const currentStep = useSignal(0);
   const responses = useSignal<GroundingStepResponse[]>([]);
@@ -321,8 +299,9 @@ export default function GroundingApp() {
   };
 
   const nextStep = () => {
-    const step = steps[currentStep.value];
-    const inputs = inputRefs.current.slice(0, step.count);
+    const stepConfig = stepConfigs[currentStep.value];
+    const stepI18n = i18n.grounding.steps[stepConfig.category];
+    const inputs = inputRefs.current.slice(0, stepConfig.count);
     const values = inputs.map((input) => input?.value?.trim() || '');
 
     const result = stepResponseSchema.safeParse(values);
@@ -338,13 +317,13 @@ export default function GroundingApp() {
       ...responses.value,
       {
         step: currentStep.value,
-        category: step.category,
-        title: step.title,
+        category: stepConfig.category,
+        title: stepI18n.title,
         data: values,
       },
     ];
 
-    if (currentStep.value < steps.length - 1) {
+    if (currentStep.value < stepConfigs.length - 1) {
       currentStep.value++;
       setTimeout(() => inputRefs.current[0]?.focus(), 100);
     } else {
@@ -366,18 +345,18 @@ export default function GroundingApp() {
   };
 
   const cancelSession = () => {
-    if (confirm('途中ですが、やめますか？')) {
+    if (confirm(i18n.grounding.confirmCancel)) {
       screen.value = 'start';
     }
   };
 
   const handleDeleteSession = async (id: number) => {
-    if (confirm('この記録を削除しますか？')) {
+    if (confirm(i18n.grounding.confirmDelete)) {
       try {
         await deleteGroundingSession(id);
         await loadHistory();
       } catch (error) {
-        console.error('削除に失敗しました:', error);
+        console.error('Failed to delete:', error);
       }
     }
   };
@@ -387,8 +366,8 @@ export default function GroundingApp() {
 
     if (e.key === 'Enter') {
       e.preventDefault();
-      const step = steps[currentStep.value];
-      if (index < step.count - 1) {
+      const stepConfig = stepConfigs[currentStep.value];
+      if (index < stepConfig.count - 1) {
         inputRefs.current[index + 1]?.focus();
       } else {
         nextStep();
@@ -396,42 +375,59 @@ export default function GroundingApp() {
     }
   };
 
-  const progress = ((currentStep.value + 1) / steps.length) * 100;
-  const step = steps[currentStep.value];
+  const progress = ((currentStep.value + 1) / stepConfigs.length) * 100;
 
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
-    return `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日 ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    const { year, month, day } = i18n.grounding.dateFormat;
+    if (year) {
+      // Japanese format: YYYY年M月D日 HH:MM
+      return `${date.getFullYear()}${year}${date.getMonth() + 1}${month}${date.getDate()}${day} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+    }
+    // English format: M/D/YYYY HH:MM
+    return `${date.getMonth() + 1}${month}${date.getDate()}${day}${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+  };
+
+  const stepConfig = stepConfigs[currentStep.value];
+  const stepI18n = i18n.grounding.steps[stepConfig.category];
+
+  const getPlaceholder = (i: number) => {
+    if (i === 1) return stepI18n.placeholderFirst;
+    return stepI18n.placeholderN.replace('{n}', String(i));
   };
 
   return (
     <div class={styles.container}>
       <header class={styles.header}>
-        <h1 class={styles.title}>54321</h1>
-        <p class={styles.subtitle}>グラウンディング</p>
+        <h1 class={styles.title}>{i18n.grounding.title}</h1>
+        <p class={styles.subtitle}>{i18n.grounding.subtitle}</p>
       </header>
 
       <main class={styles.main}>
-        {/* スタート画面 */}
+        {/* Start screen */}
         {screen.value === 'start' && (
           <div class="screen">
             <div class={styles.sheepWelcome}>
               <div class={`${styles.sheep} sheep`}>🐑</div>
               <p class={styles.welcomeText}>
-                深呼吸をして、<br />
-                今この瞬間に意識を向けましょう。
+                {i18n.grounding.welcomeText.split('\n').map((line, idx) => (
+                  <span key={idx}>
+                    {line}
+                    {idx === 0 && <br />}
+                  </span>
+                ))}
               </p>
             </div>
             <button class={`${styles.btn} ${styles.btnFull} ${styles.btnPrimary}`} onClick={startSession}>
-              はじめる
+              {i18n.grounding.startBtn}
             </button>
             <button class={`${styles.btn} ${styles.btnFull} ${styles.btnSecondary}`} onClick={() => (screen.value = 'history')}>
-              履歴を見る
+              {i18n.grounding.historyBtn}
             </button>
           </div>
         )}
 
-        {/* ステップ画面 */}
+        {/* Step screen */}
         {screen.value === 'step' && (
           <div class="screen">
             <div class={styles.progressBar}>
@@ -439,15 +435,15 @@ export default function GroundingApp() {
             </div>
             <div class={styles.stepContent}>
               <div class={`${styles.stepSheep} sheep`}>🐑</div>
-              <h2 class={styles.stepTitle}>{step.title}</h2>
-              <p class={styles.instruction}>{step.instruction}</p>
+              <h2 class={styles.stepTitle}>{stepI18n.title}</h2>
+              <p class={styles.instruction}>{stepI18n.instruction}</p>
               <div class={styles.inputContainer}>
-                {Array.from({ length: step.count }).map((_, i) => (
+                {Array.from({ length: stepConfig.count }).map((_, i) => (
                   <div class={styles.inputItem} key={i}>
                     <input
                       type="text"
                       class={styles.input}
-                      placeholder={step.placeholder(i + 1)}
+                      placeholder={getPlaceholder(i + 1)}
                       ref={(el) => {
                         if (el) inputRefs.current[i] = el;
                       }}
@@ -461,45 +457,49 @@ export default function GroundingApp() {
               </div>
               <div class={styles.buttonGroup}>
                 <button class={`${styles.btn} ${styles.btnSecondary} ${styles.buttonGroupBtn}`} onClick={cancelSession}>
-                  やめる
+                  {i18n.grounding.cancelBtn}
                 </button>
                 <button class={`${styles.btn} ${styles.btnPrimary} ${styles.buttonGroupBtn}`} onClick={nextStep}>
-                  次へ
+                  {i18n.grounding.nextBtn}
                 </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* 完了画面 */}
+        {/* Complete screen */}
         {screen.value === 'complete' && (
           <div class="screen">
             <div class={styles.completeContent}>
               <div class={`${styles.sheepCelebrate} sheep-celebrate`}>🐑</div>
-              <h2 class={styles.completeTitle}>おつかれさまでした</h2>
+              <h2 class={styles.completeTitle}>{i18n.grounding.completeTitle}</h2>
               <p class={styles.completeMessage}>
-                今この瞬間に、<br />
-                あなたはしっかりとつながっています。
+                {i18n.grounding.completeMessage.split('\n').map((line, idx) => (
+                  <span key={idx}>
+                    {line}
+                    {idx === 0 && <br />}
+                  </span>
+                ))}
               </p>
               <button class={`${styles.btn} ${styles.btnFull} ${styles.btnPrimary}`} onClick={() => (screen.value = 'start')}>
-                おわる
+                {i18n.grounding.endBtn}
               </button>
             </div>
           </div>
         )}
 
-        {/* 履歴画面 */}
+        {/* History screen */}
         {screen.value === 'history' && (
           <div class="screen">
-            <h2 class={styles.historyTitle}>履歴</h2>
+            <h2 class={styles.historyTitle}>{i18n.grounding.historyTitle}</h2>
             <div class={styles.historyList}>
               {history.value.length === 0 ? (
                 <div class={styles.emptyHistory}>
                   <div class={`${styles.emptySheep} sheep`}>🐑</div>
                   <p>
-                    まだ記録がありません。
+                    {i18n.grounding.noHistory}
                     <br />
-                    はじめてのセッションを始めましょう。
+                    {i18n.grounding.noHistoryHint}
                   </p>
                 </div>
               ) : (
@@ -510,7 +510,7 @@ export default function GroundingApp() {
                       <button
                         class={styles.deleteBtn}
                         onClick={() => session.id && handleDeleteSession(session.id)}
-                        title="削除"
+                        title={i18n.grounding.deleteTitle}
                       >
                         ×
                       </button>
@@ -530,7 +530,7 @@ export default function GroundingApp() {
               )}
             </div>
             <button class={`${styles.btn} ${styles.btnFull} ${styles.btnSecondary}`} onClick={() => (screen.value = 'start')}>
-              戻る
+              {i18n.grounding.backBtn}
             </button>
           </div>
         )}

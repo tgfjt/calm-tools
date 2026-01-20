@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { css } from '../../styled-system/css';
 import { token } from '../../styled-system/tokens';
+import { detectLocaleFromHeader, getTranslations } from '../i18n';
 
 interface Props {
   title: string;
@@ -9,6 +10,11 @@ interface Props {
 }
 
 const { title, theme = 'home' } = Astro.props;
+
+// Detect locale from Accept-Language header (SSR)
+const acceptLanguage = Astro.request.headers.get('accept-language');
+const locale = detectLocaleFromHeader(acceptLanguage);
+const i18n = getTranslations(locale);
 
 const bodyStyles = {
   home: css({
@@ -90,7 +96,7 @@ const homeBtnStyles = {
 ---
 
 <!DOCTYPE html>
-<html lang="ja">
+<html lang={locale} data-locale={locale}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -104,7 +110,7 @@ const homeBtnStyles = {
 </head>
 <body class={bodyStyles[theme]}>
   {theme !== 'home' && (
-    <a href="/" class={homeBtnStyles[theme]} aria-label="ホームへ戻る">
+    <a href="/" class={homeBtnStyles[theme]} aria-label={i18n.common.backToHome}>
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
         <polyline points="9 22 9 12 15 12 15 22"/>
