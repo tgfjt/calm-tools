@@ -1,7 +1,15 @@
 {
-  "name": "stellar-shell",
+  "name": "calm-tools",
+  "description": "Wellness web app with breathing and grounding exercises",
   "type": "module",
   "version": "0.0.1",
+  "private": true,
+  "license": "MIT",
+  "author": "tgfjt",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tgfjt/calm-tools.git"
+  },
   "scripts": {
     "prepare": "panda codegen",
     "dev": "astro dev",
