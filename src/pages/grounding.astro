@@ -2,8 +2,13 @@
 import Layout from '../layouts/Layout.astro';
 import GroundingApp from '../components/grounding/GroundingApp';
 import '../styles/grounding.css';
+import { detectLocaleFromHeader, getTranslations } from '../i18n';
+
+const acceptLanguage = Astro.request.headers.get('accept-language');
+const locale = detectLocaleFromHeader(acceptLanguage);
+const i18n = getTranslations(locale);
 ---
 
-<Layout title="54321 グラウンディング" theme="grounding">
-  <GroundingApp client:load />
+<Layout title={`${i18n.grounding.title} ${i18n.grounding.subtitle}`} theme="grounding">
+  <GroundingApp client:load locale={locale} />
 </Layout>
