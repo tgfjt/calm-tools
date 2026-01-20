@@ -306,7 +306,7 @@ export default function GroundingApp({ locale }: Props) {
 
     const result = stepResponseSchema.safeParse(values);
     if (!result.success) {
-      validationError.value = result.error.errors[0].message;
+      validationError.value = result.error.issues[0].message;
       setTimeout(() => {
         validationError.value = null;
       }, 3000);
