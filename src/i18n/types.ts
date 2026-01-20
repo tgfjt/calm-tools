@@ -100,5 +100,8 @@ export interface Translations {
       month: string;
       day: string;
     };
+    accessibilityLabels: {
+      inputLabel: string;
+    };
   };
 }

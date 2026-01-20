@@ -100,5 +100,8 @@ export const en: Translations = {
       month: '/',
       day: '/',
     },
+    accessibilityLabels: {
+      inputLabel: 'Input field {n}',
+    },
   },
 };

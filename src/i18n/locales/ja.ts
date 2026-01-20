@@ -100,5 +100,8 @@ export const ja: Translations = {
       month: '月',
       day: '日',
     },
+    accessibilityLabels: {
+      inputLabel: '{n}つ目の入力欄',
+    },
   },
 };

@@ -263,6 +263,22 @@ const styles = {
     marginBottom: '15px',
     opacity: 0.5,
   }),
+  fieldset: css({
+    border: 'none',
+    padding: 0,
+    margin: 0,
+  }),
+  visuallyHidden: css({
+    position: 'absolute',
+    width: '1px',
+    height: '1px',
+    padding: 0,
+    margin: '-1px',
+    overflow: 'hidden',
+    clip: 'rect(0, 0, 0, 0)',
+    whiteSpace: 'nowrap',
+    border: 0,
+  }),
 };
 
 export default function GroundingApp({ locale }: Props) {
@@ -397,16 +413,16 @@ export default function GroundingApp({ locale }: Props) {
   };
 
   return (
-    <div class={styles.container}>
+    <div class={styles.container} data-testid="grounding-app">
       <header class={styles.header}>
         <h1 class={styles.title}>{i18n.grounding.title}</h1>
         <p class={styles.subtitle}>{i18n.grounding.subtitle}</p>
       </header>
 
-      <main class={styles.main}>
+      <main class={styles.main} data-testid="grounding-main">
         {/* Start screen */}
         {screen.value === 'start' && (
-          <div class="screen">
+          <div class="screen" data-testid="grounding-screen-start">
             <div class={styles.sheepWelcome}>
               <div class={`${styles.sheep} sheep`}>🐑</div>
               <p class={styles.welcomeText}>
@@ -418,10 +434,18 @@ export default function GroundingApp({ locale }: Props) {
                 ))}
               </p>
             </div>
-            <button class={`${styles.btn} ${styles.btnFull} ${styles.btnPrimary}`} onClick={startSession}>
+            <button
+              class={`${styles.btn} ${styles.btnFull} ${styles.btnPrimary}`}
+              onClick={startSession}
+              data-testid="grounding-start-btn"
+            >
               {i18n.grounding.startBtn}
             </button>
-            <button class={`${styles.btn} ${styles.btnFull} ${styles.btnSecondary}`} onClick={() => (screen.value = 'history')}>
+            <button
+              class={`${styles.btn} ${styles.btnFull} ${styles.btnSecondary}`}
+              onClick={() => (screen.value = 'history')}
+              data-testid="grounding-history-btn"
+            >
               {i18n.grounding.historyBtn}
             </button>
           </div>
@@ -429,47 +453,86 @@ export default function GroundingApp({ locale }: Props) {
 
         {/* Step screen */}
         {screen.value === 'step' && (
-          <div class="screen">
-            <div class={styles.progressBar}>
+          <div class="screen" data-testid="grounding-screen-step">
+            <div class={styles.progressBar} data-testid="grounding-progress-bar">
               <div class={styles.progressFill} style={{ width: `${progress}%` }} />
             </div>
-            <div class={styles.stepContent}>
-              <div class={`${styles.stepSheep} sheep`}>🐑</div>
-              <h2 class={styles.stepTitle}>{stepI18n.title}</h2>
-              <p class={styles.instruction}>{stepI18n.instruction}</p>
-              <div class={styles.inputContainer}>
-                {Array.from({ length: stepConfig.count }).map((_, i) => (
-                  <div class={styles.inputItem} key={i}>
-                    <input
-                      type="text"
-                      class={styles.input}
-                      placeholder={getPlaceholder(i + 1)}
-                      ref={(el) => {
-                        if (el) inputRefs.current[i] = el;
-                      }}
-                      onKeyDown={(e) => handleKeyDown(e, i)}
-                    />
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                nextStep();
+              }}
+              data-testid="grounding-step-form"
+            >
+              <fieldset class={styles.fieldset}>
+                <legend class={styles.visuallyHidden}>{stepI18n.title}</legend>
+                <div class={styles.stepContent}>
+                  <div class={`${styles.stepSheep} sheep`}>🐑</div>
+                  <h2 class={styles.stepTitle}>{stepI18n.title}</h2>
+                  <p class={styles.instruction}>{stepI18n.instruction}</p>
+                  <div class={styles.inputContainer}>
+                    {Array.from({ length: stepConfig.count }).map((_, i) => {
+                      const inputId = `grounding-input-${stepConfig.category}-${i}`;
+                      const hasError = validationError.value !== null;
+                      return (
+                        <div class={styles.inputItem} key={i}>
+                          <label htmlFor={inputId} class={styles.visuallyHidden}>
+                            {i18n.grounding.accessibilityLabels.inputLabel.replace('{n}', String(i + 1))}
+                          </label>
+                          <input
+                            id={inputId}
+                            type="text"
+                            class={styles.input}
+                            placeholder={getPlaceholder(i + 1)}
+                            data-testid={`grounding-input-${stepConfig.category}-${i}`}
+                            aria-describedby={hasError ? 'grounding-validation-error' : undefined}
+                            aria-invalid={hasError ? 'true' : undefined}
+                            ref={(el) => {
+                              if (el) inputRefs.current[i] = el;
+                            }}
+                            onKeyDown={(e) => handleKeyDown(e, i)}
+                          />
+                        </div>
+                      );
+                    })}
+                    {validationError.value && (
+                      <div
+                        id="grounding-validation-error"
+                        class={styles.validationError}
+                        role="alert"
+                        aria-live="assertive"
+                        data-testid="grounding-validation-error"
+                      >
+                        {validationError.value}
+                      </div>
+                    )}
                   </div>
-                ))}
-                {validationError.value && (
-                  <div class={`${styles.validationError} validation-error`}>{validationError.value}</div>
-                )}
-              </div>
-              <div class={styles.buttonGroup}>
-                <button class={`${styles.btn} ${styles.btnSecondary} ${styles.buttonGroupBtn}`} onClick={cancelSession}>
-                  {i18n.grounding.cancelBtn}
-                </button>
-                <button class={`${styles.btn} ${styles.btnPrimary} ${styles.buttonGroupBtn}`} onClick={nextStep}>
-                  {i18n.grounding.nextBtn}
-                </button>
-              </div>
-            </div>
+                  <div class={styles.buttonGroup}>
+                    <button
+                      type="button"
+                      class={`${styles.btn} ${styles.btnSecondary} ${styles.buttonGroupBtn}`}
+                      onClick={cancelSession}
+                      data-testid="grounding-cancel-btn"
+                    >
+                      {i18n.grounding.cancelBtn}
+                    </button>
+                    <button
+                      type="submit"
+                      class={`${styles.btn} ${styles.btnPrimary} ${styles.buttonGroupBtn}`}
+                      data-testid="grounding-next-btn"
+                    >
+                      {i18n.grounding.nextBtn}
+                    </button>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
           </div>
         )}
 
         {/* Complete screen */}
         {screen.value === 'complete' && (
-          <div class="screen">
+          <div class="screen" data-testid="grounding-screen-complete">
             <div class={styles.completeContent}>
               <div class={`${styles.sheepCelebrate} sheep-celebrate`}>🐑</div>
               <h2 class={styles.completeTitle}>{i18n.grounding.completeTitle}</h2>
@@ -481,7 +544,11 @@ export default function GroundingApp({ locale }: Props) {
                   </span>
                 ))}
               </p>
-              <button class={`${styles.btn} ${styles.btnFull} ${styles.btnPrimary}`} onClick={() => (screen.value = 'start')}>
+              <button
+                class={`${styles.btn} ${styles.btnFull} ${styles.btnPrimary}`}
+                onClick={() => (screen.value = 'start')}
+                data-testid="grounding-finish-btn"
+              >
                 {i18n.grounding.endBtn}
               </button>
             </div>
@@ -490,7 +557,7 @@ export default function GroundingApp({ locale }: Props) {
 
         {/* History screen */}
         {screen.value === 'history' && (
-          <div class="screen">
+          <div class="screen" data-testid="grounding-screen-history">
             <h2 class={styles.historyTitle}>{i18n.grounding.historyTitle}</h2>
             <div class={styles.historyList}>
               {history.value.length === 0 ? (
@@ -511,6 +578,8 @@ export default function GroundingApp({ locale }: Props) {
                         class={styles.deleteBtn}
                         onClick={() => session.id && handleDeleteSession(session.id)}
                         title={i18n.grounding.deleteTitle}
+                        aria-label={`${i18n.grounding.deleteTitle}: ${formatDate(session.timestamp)}`}
+                        data-testid={`grounding-delete-btn-${session.id}`}
                       >
                         ×
                       </button>
@@ -529,7 +598,11 @@ export default function GroundingApp({ locale }: Props) {
                 ))
               )}
             </div>
-            <button class={`${styles.btn} ${styles.btnFull} ${styles.btnSecondary}`} onClick={() => (screen.value = 'start')}>
+            <button
+              class={`${styles.btn} ${styles.btnFull} ${styles.btnSecondary}`}
+              onClick={() => (screen.value = 'start')}
+              data-testid="grounding-back-btn"
+            >
               {i18n.grounding.backBtn}
             </button>
           </div>
