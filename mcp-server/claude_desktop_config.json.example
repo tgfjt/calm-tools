@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "calm-tools": {
+      "command": "node",
+      "args": ["/path/to/calm-tools/mcp-server/dist/index.js"],
+      "transport": "stdio"
+    }
+  }
+}
