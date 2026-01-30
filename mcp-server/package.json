@@ -2,33 +2,31 @@
   "name": "@calm-tools/mcp-server",
   "version": "0.0.1",
   "type": "module",
-  "description": "MCP server for Calm Tools with Claude-connected UI",
-  "main": "dist/index.js",
+  "description": "MCP Apps server for Calm Tools with Claude-connected UI",
+  "main": "server.ts",
   "scripts": {
-    "build": "npm run build:server && npm run build:ui",
-    "build:server": "tsc",
-    "build:ui": "vite build --config ui/vite.config.ts",
-    "dev": "tsc --watch",
-    "start": "node dist/index.js",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "inspector": "npx @modelcontextprotocol/inspector node dist/index.js"
+    "build": "INPUT=ui/index.html vite build",
+    "serve": "npx tsx server.ts",
+    "dev": "npm run build && npm run serve",
+    "tunnel": "npx cloudflared tunnel --url http://localhost:3002"
   },
   "dependencies": {
     "@modelcontextprotocol/ext-apps": "^1.0.1",
-    "@modelcontextprotocol/sdk": "^1.12.0",
+    "@modelcontextprotocol/sdk": "^1.25.3",
     "@preact/signals": "^2.6.1",
-    "zod": "^3.24.0"
+    "cors": "^2.8.5",
+    "express": "^5.0.1",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.9.0",
-    "@testing-library/preact": "^3.2.4",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",
-    "jsdom": "^26.0.0",
     "preact": "^10.28.2",
+    "tsx": "^4.19.0",
     "typescript": "^5.7.0",
     "vite": "^6.0.0",
-    "vite-plugin-singlefile": "^2.0.0",
-    "vitest": "^3.0.0"
+    "vite-plugin-singlefile": "^2.0.0"
   }
 }
