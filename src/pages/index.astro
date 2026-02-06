@@ -18,13 +18,13 @@ const styles = {
   }),
   title: css({
     fontSize: '2.5rem',
-    fontWeight: 300,
+    fontWeight: 200,
     letterSpacing: '0.2em',
     marginBottom: '0.5rem',
-    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)',
   }),
   tagline: css({
     fontSize: '1.1rem',
+    fontWeight: 300,
     opacity: 0.8,
     marginBottom: '3rem',
     letterSpacing: '0.1em',
@@ -43,7 +43,6 @@ const styles = {
     borderRadius: '24px',
     textDecoration: 'none',
     transition: 'all 0.3s ease',
-    backdropFilter: 'blur(10px)',
     sm: {
       flex: 1,
     },
@@ -52,21 +51,21 @@ const styles = {
     },
   }),
   cardBreath: css({
-    background: token('colors.breath.surfaceMedium'),
-    border: `2px solid ${token('colors.breath.borderMedium')}`,
+    background: 'transparent',
+    border: '1px solid rgba(226,226,240,0.2)',
     color: token('colors.breath.text'),
     _hover: {
-      background: token('colors.breath.surfaceStronger'),
-      boxShadow: `0 8px 32px ${token('colors.breath.glow')}`,
+      background: 'transparent',
+      borderColor: 'rgba(226,226,240,0.5)',
     },
   }),
   cardGrounding: css({
-    background: token('colors.grounding.surfaceWhite'),
-    border: `2px solid ${token('colors.grounding.borderWhite')}`,
+    background: 'transparent',
+    border: '1px solid rgba(226,226,240,0.2)',
     color: 'white',
     _hover: {
-      background: token('colors.grounding.surfaceWhiteMedium'),
-      boxShadow: `0 8px 32px ${token('colors.grounding.surfaceWhite')}`,
+      background: 'transparent',
+      borderColor: 'rgba(226,226,240,0.5)',
     },
   }),
   cardIcon: css({
@@ -75,12 +74,13 @@ const styles = {
   }),
   cardTitle: css({
     fontSize: '1.5rem',
-    fontWeight: 400,
+    fontWeight: 300,
     letterSpacing: '0.15em',
     marginBottom: '0.5rem',
   }),
   cardDesc: css({
     fontSize: '1rem',
+    fontWeight: 300,
     opacity: 0.8,
     marginBottom: '0.5rem',
   }),

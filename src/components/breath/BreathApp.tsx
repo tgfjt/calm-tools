@@ -35,7 +35,7 @@ const styles = {
   }),
   title: css({
     fontSize: '1.8rem',
-    fontWeight: 300,
+    fontWeight: 200,
     marginBottom: '2rem',
     letterSpacing: '0.3em',
     opacity: 0.9,
@@ -56,7 +56,6 @@ const styles = {
     borderRadius: '16px',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
-    backdropFilter: 'blur(10px)',
     minWidth: '160px',
     _hover: {
       background: token('colors.breath.surfaceStrong'),
@@ -71,11 +70,10 @@ const styles = {
   patternBtnSelected: css({
     background: token('colors.breath.surfaceStronger'),
     borderColor: token('colors.breath.borderStronger'),
-    boxShadow: `0 0 20px ${token('colors.breath.glow')}`,
   }),
   patternName: css({
     fontSize: '1.2rem',
-    fontWeight: 400,
+    fontWeight: 300,
     letterSpacing: '0.15em',
     marginBottom: '0.5rem',
   }),
@@ -126,8 +124,7 @@ const styles = {
     height: '100%',
     borderRadius: '50%',
     background: token('gradients.breathCircle'),
-    border: `2px solid ${token('colors.breath.border')}`,
-    boxShadow: `0 0 40px ${token('colors.breath.glowWeak')}, inset 0 0 60px ${token('colors.breath.surface')}`,
+    border: `1.5px solid ${token('colors.breath.border')}`,
     transition: 'all 0.3s ease',
   }),
   circleContent: css({
@@ -177,13 +174,12 @@ const styles = {
     color: token('colors.breath.muted'),
     padding: '1rem 2.5rem',
     fontSize: '1rem',
+    fontWeight: 300,
     borderRadius: '30px',
     transition: 'all 0.3s ease',
     letterSpacing: '0.1em',
-    backdropFilter: 'blur(10px)',
     _hover: {
       background: token('colors.breath.surfaceStronger'),
-      boxShadow: `0 0 20px ${token('colors.breath.glow')}`,
       transform: 'translateY(-2px)',
     },
     _disabled: {

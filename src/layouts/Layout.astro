@@ -24,7 +24,7 @@ const bodyStyles = {
     justifyContent: 'center',
     alignItems: 'center',
     background: token('gradients.home'),
-    color: 'white',
+    color: token('colors.home.secondary'),
   }),
   breath: css({
     fontFamily: token('fonts.body'),
@@ -58,14 +58,12 @@ const homeBtnStyles = {
     justifyContent: 'center',
     borderRadius: '50%',
     transition: 'all 0.3s ease',
-    backdropFilter: 'blur(10px)',
     zIndex: 100,
     background: token('colors.breath.surfaceHover'),
     border: `1px solid ${token('colors.breath.border')}`,
     color: token('colors.breath.muted'),
     _hover: {
       background: token('colors.breath.surfaceStronger'),
-      boxShadow: `0 0 20px ${token('colors.breath.glow')}`,
       transform: 'scale(1.05)',
     },
   }),
@@ -80,7 +78,6 @@ const homeBtnStyles = {
     justifyContent: 'center',
     borderRadius: '50%',
     transition: 'all 0.3s ease',
-    backdropFilter: 'blur(10px)',
     zIndex: 100,
     background: token('colors.grounding.surfaceWhiteStrong'),
     border: `1px solid ${token('colors.grounding.surfaceWhiteStronger')}`,
@@ -103,7 +100,7 @@ const homeBtnStyles = {
   <title>{theme === 'home' ? title : `${title} - calm`}</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="manifest" href="/manifest.webmanifest">
-  <meta name="theme-color" content="#667eea">
+  <meta name="theme-color" content="#1a1a2e">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="/favicon.svg">

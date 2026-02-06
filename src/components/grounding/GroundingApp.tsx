@@ -40,20 +40,21 @@ const styles = {
   }),
   title: css({
     fontSize: '2.5rem',
+    fontWeight: 200,
     color: token('colors.grounding.text'),
     marginBottom: '10px',
-    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.08)',
   }),
   subtitle: css({
     fontSize: '1.1rem',
     color: token('colors.grounding.textLight'),
-    fontWeight: 300,
+    fontWeight: 200,
   }),
   main: css({
     background: token('colors.grounding.bg'),
     borderRadius: '30px',
     padding: '40px',
     boxShadow: token('shadows.card'),
+    border: '1px solid rgba(200,184,168,0.2)',
     position: 'relative',
     overflow: 'hidden',
   }),
@@ -90,7 +91,7 @@ const styles = {
   }),
   btnPrimary: css({
     background: token('gradients.groundingBtn'),
-    color: token('colors.grounding.text'),
+    color: '#3a3530',
   }),
   btnSecondary: css({
     background: 'white',
