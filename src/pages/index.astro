@@ -12,35 +12,35 @@ const i18n = getTranslations(locale);
 const styles = {
   container: css({
     textAlign: 'center',
-    padding: '2rem',
-    maxWidth: '600px',
+    padding: token('spacing.8'),
+    maxWidth: token('sizes.container'),
     width: '100%',
   }),
   title: css({
-    fontSize: '2.5rem',
-    fontWeight: 300,
-    letterSpacing: '0.2em',
+    fontSize: token('fontSizes.display'),
+    fontWeight: token('fontWeights.light'),
+    letterSpacing: token('letterSpacings.heading'),
     marginBottom: '0.5rem',
     textShadow: '2px 2px 4px rgba(0, 0, 0, 0.1)',
   }),
   tagline: css({
-    fontSize: '1.1rem',
+    fontSize: token('fontSizes.body-lg'),
     opacity: 0.8,
-    marginBottom: '3rem',
-    letterSpacing: '0.1em',
+    marginBottom: token('spacing.12'),
+    letterSpacing: token('letterSpacings.button'),
   }),
   cardGrid: css({
     display: 'flex',
     flexDirection: 'column',
-    gap: '1.5rem',
+    gap: token('spacing.6'),
     sm: {
       flexDirection: 'row',
     },
   }),
   card: css({
     display: 'block',
-    padding: '2rem',
-    borderRadius: '24px',
+    padding: token('spacing.8'),
+    borderRadius: token('radii.xl'),
     textDecoration: 'none',
     transition: 'all 0.3s ease',
     backdropFilter: 'blur(10px)',
@@ -71,23 +71,23 @@ const styles = {
   }),
   cardIcon: css({
     fontSize: '3rem',
-    marginBottom: '1rem',
+    marginBottom: token('spacing.4'),
   }),
   cardTitle: css({
-    fontSize: '1.5rem',
-    fontWeight: 400,
-    letterSpacing: '0.15em',
+    fontSize: token('fontSizes.heading-2'),
+    fontWeight: token('fontWeights.regular'),
+    letterSpacing: token('letterSpacings.card'),
     marginBottom: '0.5rem',
   }),
   cardDesc: css({
-    fontSize: '1rem',
+    fontSize: token('fontSizes.body'),
     opacity: 0.8,
     marginBottom: '0.5rem',
   }),
   cardPatterns: css({
-    fontSize: '0.85rem',
+    fontSize: token('fontSizes.caption'),
     opacity: 0.6,
-    letterSpacing: '0.05em',
+    letterSpacing: token('letterSpacings.caption'),
   }),
 };
 ---

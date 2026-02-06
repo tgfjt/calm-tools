@@ -11,6 +11,7 @@ import {
   type GroundingStepResponse,
 } from '../../lib/db';
 import { stepResponseSchema } from '../../lib/schemas';
+import { stepConfigs, progress as calcProgress, isLastStep } from '../../lib/grounding-steps';
 import { getTranslations, type Locale } from '../../i18n';
 
 interface Props {
@@ -18,66 +19,57 @@ interface Props {
 }
 
 type Screen = 'start' | 'step' | 'complete' | 'history';
-type StepCategory = 'sight' | 'touch' | 'sound' | 'smell' | 'taste';
-
-const stepConfigs: { count: number; category: StepCategory }[] = [
-  { count: 5, category: 'sight' },
-  { count: 4, category: 'touch' },
-  { count: 3, category: 'sound' },
-  { count: 2, category: 'smell' },
-  { count: 1, category: 'taste' },
-];
 
 const styles = {
   container: css({
-    maxWidth: '600px',
+    maxWidth: token('sizes.container'),
     width: '100%',
-    padding: '20px',
+    padding: token('spacing.5'),
   }),
   header: css({
     textAlign: 'center',
     marginBottom: '30px',
   }),
   title: css({
-    fontSize: '2.5rem',
+    fontSize: token('fontSizes.display'),
     color: token('colors.grounding.text'),
     marginBottom: '10px',
     textShadow: '2px 2px 4px rgba(0, 0, 0, 0.08)',
   }),
   subtitle: css({
-    fontSize: '1.1rem',
+    fontSize: token('fontSizes.body-lg'),
     color: token('colors.grounding.textLight'),
-    fontWeight: 300,
+    fontWeight: token('fontWeights.light'),
   }),
   main: css({
     background: token('colors.grounding.bg'),
-    borderRadius: '30px',
-    padding: '40px',
+    borderRadius: token('radii.2xl'),
+    padding: token('spacing.10'),
     boxShadow: token('shadows.card'),
     position: 'relative',
     overflow: 'hidden',
   }),
   sheepWelcome: css({
     textAlign: 'center',
-    marginBottom: '40px',
+    marginBottom: token('spacing.10'),
   }),
   sheep: css({
     fontSize: '6rem',
-    marginBottom: '20px',
+    marginBottom: token('spacing.5'),
   }),
   welcomeText: css({
-    fontSize: '1.2rem',
-    lineHeight: 2,
+    fontSize: token('fontSizes.heading-3'),
+    lineHeight: token('lineHeights.welcome'),
     color: token('colors.grounding.text'),
   }),
   btn: css({
     padding: '16px 32px',
-    fontSize: '1.1rem',
+    fontSize: token('fontSizes.body-lg'),
     border: 'none',
-    borderRadius: '50px',
+    borderRadius: token('radii.full'),
     cursor: 'pointer',
     transition: 'all 0.3s ease',
-    fontWeight: 500,
+    fontWeight: token('fontWeights.medium'),
     marginBottom: '15px',
     boxShadow: token('shadows.btn'),
     _hover: {
@@ -118,18 +110,18 @@ const styles = {
   }),
   stepSheep: css({
     fontSize: '4rem',
-    marginBottom: '20px',
+    marginBottom: token('spacing.5'),
   }),
   stepTitle: css({
-    fontSize: '1.8rem',
+    fontSize: token('fontSizes.heading-1'),
     marginBottom: '15px',
     color: token('colors.grounding.text'),
   }),
   instruction: css({
-    fontSize: '1.1rem',
+    fontSize: token('fontSizes.body-lg'),
     marginBottom: '30px',
     color: token('colors.grounding.textLight'),
-    lineHeight: 1.8,
+    lineHeight: token('lineHeights.instruction'),
   }),
   inputContainer: css({
     marginBottom: '30px',
@@ -139,10 +131,10 @@ const styles = {
   }),
   input: css({
     width: '100%',
-    padding: '12px 20px',
+    padding: `${token('spacing.3')} ${token('spacing.5')}`,
     border: `2px solid ${token('colors.grounding.borderWhiteMax')}`,
-    borderRadius: '20px',
-    fontSize: '1rem',
+    borderRadius: token('radii.lg'),
+    fontSize: token('fontSizes.body'),
     background: 'white',
     color: token('colors.grounding.text'),
     transition: 'all 0.3s ease',
@@ -158,10 +150,10 @@ const styles = {
   validationError: css({
     background: token('colors.error.bg'),
     color: token('colors.error.text'),
-    padding: '12px 16px',
-    borderRadius: '12px',
+    padding: `${token('spacing.3')} ${token('spacing.4')}`,
+    borderRadius: token('radii.sm'),
     marginTop: '10px',
-    fontSize: '0.9rem',
+    fontSize: token('fontSizes.body-sm'),
     textAlign: 'center',
   }),
   buttonGroup: css({
@@ -177,23 +169,23 @@ const styles = {
   }),
   sheepCelebrate: css({
     fontSize: '6rem',
-    marginBottom: '20px',
+    marginBottom: token('spacing.5'),
   }),
   completeTitle: css({
     fontSize: '2rem',
-    marginBottom: '20px',
+    marginBottom: token('spacing.5'),
     color: token('colors.grounding.text'),
   }),
   completeMessage: css({
-    fontSize: '1.2rem',
-    lineHeight: 2,
-    marginBottom: '40px',
+    fontSize: token('fontSizes.heading-3'),
+    lineHeight: token('lineHeights.welcome'),
+    marginBottom: token('spacing.10'),
     color: token('colors.grounding.text'),
   }),
   historyTitle: css({
     textAlign: 'center',
     marginBottom: '30px',
-    fontSize: '1.8rem',
+    fontSize: token('fontSizes.heading-1'),
     color: token('colors.grounding.text'),
   }),
   historyList: css({
@@ -203,8 +195,8 @@ const styles = {
   }),
   historyItem: css({
     background: 'white',
-    borderRadius: '20px',
-    padding: '20px',
+    borderRadius: token('radii.lg'),
+    padding: token('spacing.5'),
     marginBottom: '15px',
     boxShadow: token('shadows.softMedium'),
     transition: 'all 0.2s ease',
@@ -220,7 +212,7 @@ const styles = {
     marginBottom: '10px',
   }),
   historyDate: css({
-    fontSize: '0.9rem',
+    fontSize: token('fontSizes.body-sm'),
     color: token('colors.grounding.textLight'),
   }),
   deleteBtn: css({
@@ -232,8 +224,9 @@ const styles = {
     padding: '4px 8px',
     borderRadius: '50%',
     transition: 'all 0.2s ease',
-    opacity: 0,
+    opacity: 0.3,
     _hover: {
+      opacity: 1,
       background: token('colors.error.hoverBg'),
       color: token('colors.error.accent'),
     },
@@ -241,21 +234,21 @@ const styles = {
   historySummary: css({
     fontSize: '0.95rem',
     color: token('colors.grounding.text'),
-    lineHeight: 1.6,
+    lineHeight: token('lineHeights.summary'),
   }),
   historyCategory: css({
     display: 'inline-block',
     padding: '4px 12px',
-    borderRadius: '12px',
-    fontSize: '0.85rem',
-    marginRight: '8px',
-    marginTop: '8px',
+    borderRadius: token('radii.sm'),
+    fontSize: token('fontSizes.caption'),
+    marginRight: token('spacing.2'),
+    marginTop: token('spacing.2'),
     background: token('colors.grounding.blue'),
     color: token('colors.grounding.text'),
   }),
   emptyHistory: css({
     textAlign: 'center',
-    padding: '40px',
+    padding: token('spacing.10'),
     color: token('colors.grounding.textLight'),
   }),
   emptySheep: css({
@@ -322,7 +315,7 @@ export default function GroundingApp({ locale }: Props) {
 
     const result = stepResponseSchema.safeParse(values);
     if (!result.success) {
-      validationError.value = result.error.issues[0].message;
+      validationError.value = i18n.grounding.validation.atLeastOne;
       setTimeout(() => {
         validationError.value = null;
       }, 3000);
@@ -339,8 +332,9 @@ export default function GroundingApp({ locale }: Props) {
       },
     ];
 
-    if (currentStep.value < stepConfigs.length - 1) {
+    if (!isLastStep(currentStep.value)) {
       currentStep.value++;
+      inputRefs.current = [];
       setTimeout(() => inputRefs.current[0]?.focus(), 100);
     } else {
       completeSession();
@@ -356,7 +350,7 @@ export default function GroundingApp({ locale }: Props) {
       await loadHistory();
       screen.value = 'complete';
     } catch (error) {
-      console.error('セッションの保存に失敗しました:', error);
+      console.error('Failed to save session:', error);
     }
   };
 
@@ -391,16 +385,14 @@ export default function GroundingApp({ locale }: Props) {
     }
   };
 
-  const progress = ((currentStep.value + 1) / stepConfigs.length) * 100;
+  const progressValue = calcProgress(currentStep.value);
 
   const formatDate = (timestamp: string) => {
     const date = new Date(timestamp);
     const { year, month, day } = i18n.grounding.dateFormat;
     if (year) {
-      // Japanese format: YYYY年M月D日 HH:MM
       return `${date.getFullYear()}${year}${date.getMonth() + 1}${month}${date.getDate()}${day} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
     }
-    // English format: M/D/YYYY HH:MM
     return `${date.getMonth() + 1}${month}${date.getDate()}${day}${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
   };
 
@@ -455,7 +447,7 @@ export default function GroundingApp({ locale }: Props) {
         {screen.value === 'step' && (
           <div class="screen" data-testid="grounding-screen-step">
             <div class={styles.progressBar} data-testid="grounding-progress-bar">
-              <div class={styles.progressFill} style={{ width: `${progress}%` }} />
+              <div class={styles.progressFill} style={{ width: `${progressValue}%` }} />
             </div>
             <form
               onSubmit={(e) => {

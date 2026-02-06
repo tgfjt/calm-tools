@@ -8,41 +8,38 @@ import {
   getBreathSessions,
   type BreathSession,
 } from '../../lib/db';
+import {
+  type Pattern,
+  type Phase,
+  type Duration,
+  patternConfigs,
+  durationValues,
+  formatTime,
+} from '../../lib/breath-timer';
 import { getTranslations, type Locale } from '../../i18n';
 
 interface Props {
   locale: Locale;
 }
 
-type Pattern = '555' | '478';
-type Phase = 'idle' | 'inhale' | 'hold' | 'exhale' | 'complete';
-type Duration = 60 | 180 | 300;
-
-const patternConfigs = {
-  '555': { inhale: 5, hold: 5, exhale: 5 },
-  '478': { inhale: 4, hold: 7, exhale: 8 },
-};
-
-const durationValues: Duration[] = [60, 180, 300];
-
 const styles = {
   container: css({
     textAlign: 'center',
     zIndex: 1,
-    padding: '2rem',
-    maxWidth: '600px',
+    padding: token('spacing.8'),
+    maxWidth: token('sizes.container'),
     width: '100%',
   }),
   title: css({
-    fontSize: '1.8rem',
-    fontWeight: 300,
-    marginBottom: '2rem',
-    letterSpacing: '0.3em',
+    fontSize: token('fontSizes.heading-1'),
+    fontWeight: token('fontWeights.light'),
+    marginBottom: token('spacing.8'),
+    letterSpacing: token('letterSpacings.title'),
     opacity: 0.9,
     color: token('colors.breath.muted'),
   }),
   patternSelection: css({
-    marginBottom: '1.5rem',
+    marginBottom: token('spacing.6'),
     display: 'flex',
     gap: '1rem',
     justifyContent: 'center',
@@ -53,7 +50,7 @@ const styles = {
     border: `2px solid ${token('colors.breath.border')}`,
     color: token('colors.breath.muted'),
     padding: '1.2rem 1.5rem',
-    borderRadius: '16px',
+    borderRadius: token('radii.md'),
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     backdropFilter: 'blur(10px)',
@@ -74,22 +71,22 @@ const styles = {
     boxShadow: `0 0 20px ${token('colors.breath.glow')}`,
   }),
   patternName: css({
-    fontSize: '1.2rem',
-    fontWeight: 400,
-    letterSpacing: '0.15em',
+    fontSize: token('fontSizes.heading-3'),
+    fontWeight: token('fontWeights.regular'),
+    letterSpacing: token('letterSpacings.card'),
     marginBottom: '0.5rem',
   }),
   patternDesc: css({
-    fontSize: '0.85rem',
+    fontSize: token('fontSizes.caption'),
     opacity: 0.7,
-    letterSpacing: '0.05em',
-    lineHeight: 1.4,
+    letterSpacing: token('letterSpacings.caption'),
+    lineHeight: token('lineHeights.description'),
     whiteSpace: 'pre-line',
   }),
   durationSelection: css({
-    marginBottom: '2rem',
+    marginBottom: token('spacing.8'),
     display: 'flex',
-    gap: '0.5rem',
+    gap: token('spacing.2'),
     justifyContent: 'center',
   }),
   durationBtn: css({
@@ -97,10 +94,10 @@ const styles = {
     border: `1px solid ${token('colors.breath.borderWeak')}`,
     color: token('colors.breath.muted'),
     padding: '0.5rem 1rem',
-    borderRadius: '20px',
+    borderRadius: token('radii.lg'),
     cursor: 'pointer',
     transition: 'all 0.3s ease',
-    fontSize: '0.9rem',
+    fontSize: token('fontSizes.body-sm'),
     opacity: 0.7,
     _hover: {
       opacity: 1,
@@ -116,8 +113,8 @@ const styles = {
     borderColor: token('colors.breath.borderStrong'),
   }),
   breathCircle: css({
-    width: '280px',
-    height: '280px',
+    width: token('sizes.breathCircle'),
+    height: token('sizes.breathCircle'),
     margin: '0 auto 3rem',
     position: 'relative',
   }),
@@ -144,23 +141,23 @@ const styles = {
   phaseCountdown: css({
     fontSize: '4rem',
     fontWeight: 200,
-    lineHeight: 1,
+    lineHeight: token('lineHeights.countdown'),
     color: token('colors.breath.muted'),
     minHeight: '4.5rem',
   }),
   instruction: css({
-    fontSize: '1.5rem',
-    fontWeight: 300,
-    letterSpacing: '0.2em',
+    fontSize: token('fontSizes.heading-2'),
+    fontWeight: token('fontWeights.light'),
+    letterSpacing: token('letterSpacings.heading'),
     minHeight: '2rem',
     color: token('colors.breath.accentLight'),
     marginTop: '0.5rem',
     whiteSpace: 'nowrap',
   }),
   timer: css({
-    fontSize: '1rem',
-    fontWeight: 300,
-    marginBottom: '2rem',
+    fontSize: token('fontSizes.body'),
+    fontWeight: token('fontWeights.light'),
+    marginBottom: token('spacing.8'),
     fontVariantNumeric: 'tabular-nums',
     color: token('colors.breath.muted'),
     opacity: 0.6,
@@ -169,17 +166,17 @@ const styles = {
     display: 'flex',
     gap: '1.5rem',
     justifyContent: 'center',
-    marginBottom: '3rem',
+    marginBottom: token('spacing.12'),
   }),
   controlBtn: css({
     background: token('colors.breath.surfaceMedium'),
     border: `1px solid ${token('colors.breath.borderMedium')}`,
     color: token('colors.breath.muted'),
     padding: '1rem 2.5rem',
-    fontSize: '1rem',
-    borderRadius: '30px',
+    fontSize: token('fontSizes.body'),
+    borderRadius: token('radii.2xl'),
     transition: 'all 0.3s ease',
-    letterSpacing: '0.1em',
+    letterSpacing: token('letterSpacings.button'),
     backdropFilter: 'blur(10px)',
     _hover: {
       background: token('colors.breath.surfaceStronger'),
@@ -192,20 +189,20 @@ const styles = {
     },
   }),
   history: css({
-    marginTop: '3rem',
-    paddingTop: '2rem',
+    marginTop: token('spacing.12'),
+    paddingTop: token('spacing.8'),
     borderTop: `1px solid ${token('colors.breath.borderWeak')}`,
   }),
   historyTitle: css({
-    fontSize: '1.2rem',
-    fontWeight: 300,
+    fontSize: token('fontSizes.heading-3'),
+    fontWeight: token('fontWeights.light'),
     marginBottom: '1.5rem',
-    letterSpacing: '0.2em',
+    letterSpacing: token('letterSpacings.heading'),
     opacity: 0.8,
     color: token('colors.breath.muted'),
   }),
   stats: css({
-    fontSize: '0.9rem',
+    fontSize: token('fontSizes.body-sm'),
     opacity: 0.7,
     color: token('colors.breath.textAlt'),
     marginBottom: '1rem',
@@ -221,8 +218,8 @@ const styles = {
   historyItem: css({
     background: token('colors.breath.surface'),
     padding: '0.8rem 1.2rem',
-    borderRadius: '12px',
-    fontSize: '0.9rem',
+    borderRadius: token('radii.sm'),
+    fontSize: token('fontSizes.body-sm'),
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -231,7 +228,7 @@ const styles = {
   }),
   historyDate: css({
     opacity: 0.7,
-    fontSize: '0.85rem',
+    fontSize: token('fontSizes.caption'),
   }),
 };
 
@@ -357,8 +354,6 @@ export default function BreathApp({ locale }: Props) {
       pattern: selectedPattern.value,
     });
     await loadHistory();
-
-    setTimeout(() => reset(), 3000);
   };
 
   const reset = async () => {
@@ -390,10 +385,9 @@ export default function BreathApp({ locale }: Props) {
     selectedPattern.value = p;
   };
 
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${i18n.breath.remaining} ${m}:${String(s).padStart(2, '0')}`;
+  const displayTime = (seconds: number) => {
+    const formatted = formatTime(seconds);
+    return i18n.breath.remainingFormat.replace('{time}', formatted);
   };
 
   const completedCount = useComputed(
@@ -401,16 +395,17 @@ export default function BreathApp({ locale }: Props) {
   );
 
   return (
-    <div class={styles.container}>
+    <div class={styles.container} data-testid="breath-app">
       <h1 class={styles.title}>{i18n.breath.title}</h1>
 
-      <div class={styles.patternSelection}>
+      <div class={styles.patternSelection} data-testid="breath-pattern-selection">
         {(['555', '478'] as Pattern[]).map((p) => (
           <button
             key={p}
             class={`${styles.patternBtn} ${selectedPattern.value === p ? styles.patternBtnSelected : ''}`}
             onClick={() => selectPattern(p)}
             disabled={isRunning.value}
+            data-testid={`breath-pattern-${p}`}
           >
             <div class={styles.patternName}>{i18n.breath.patterns[p].name}</div>
             <div class={styles.patternDesc}>{i18n.breath.patterns[p].desc}</div>
@@ -418,55 +413,62 @@ export default function BreathApp({ locale }: Props) {
         ))}
       </div>
 
-      <div class={styles.durationSelection}>
+      <div class={styles.durationSelection} data-testid="breath-duration-selection">
         {durationValues.map((d) => (
           <button
             key={d}
             class={`${styles.durationBtn} ${selectedDuration.value === d ? styles.durationBtnSelected : ''}`}
             onClick={() => selectDuration(d)}
             disabled={isRunning.value}
+            data-testid={`breath-duration-${d}`}
           >
             {i18n.breath.durations[String(d) as '60' | '180' | '300']}
           </button>
         ))}
       </div>
 
-      <div class={styles.breathCircle}>
+      <div class={styles.breathCircle} data-testid="breath-circle">
         <div class={`${styles.circle} circle ${circleClass.value}`} />
         <div class={styles.circleContent}>
-          <div class={styles.phaseCountdown}>
+          <div class={styles.phaseCountdown} data-testid="breath-phase-countdown">
             {phaseCountdown.value > 0 ? phaseCountdown.value : ''}
           </div>
-          <div class={styles.instruction}>{instruction.value}</div>
+          <div class={styles.instruction} data-testid="breath-instruction">
+            {instruction.value}
+          </div>
         </div>
       </div>
 
-      <div class={styles.timer}>{formatTime(remainingTime.value)}</div>
+      <div class={styles.timer} data-testid="breath-timer">{displayTime(remainingTime.value)}</div>
 
-      <div class={styles.controls}>
-        <button class={styles.controlBtn} onClick={start} disabled={isRunning.value}>
+      <div class={styles.controls} data-testid="breath-controls">
+        <button class={styles.controlBtn} onClick={start} disabled={isRunning.value} data-testid="breath-start-btn">
           {i18n.breath.start}
         </button>
-        <button class={styles.controlBtn} onClick={reset} disabled={!isRunning.value && phase.value === 'idle'}>
+        <button class={styles.controlBtn} onClick={reset} disabled={!isRunning.value && phase.value === 'idle'} data-testid="breath-reset-btn">
           {i18n.breath.reset}
         </button>
       </div>
 
-      <div class={styles.history}>
+      <div class={styles.history} data-testid="breath-history">
         <h2 class={styles.historyTitle}>{i18n.breath.history}</h2>
-        <div class={styles.stats}>
+        <div class={styles.stats} data-testid="breath-stats">
           {history.value.length === 0
             ? i18n.breath.noRecords
             : i18n.breath.stats
                 .replace('{total}', String(history.value.length))
                 .replace('{completed}', String(completedCount.value))}
         </div>
-        <div class={styles.historyList}>
+        <div class={styles.historyList} data-testid="breath-history-list">
           {history.value.slice(0, 10).map((session) => {
             const date = new Date(session.timestamp);
-            const dateStr = `${date.getMonth() + 1}/${date.getDate()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+            const { year, month, day } = i18n.breath.dateFormat;
+            const time = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+            const dateStr = year
+              ? `${date.getFullYear()}${year}${date.getMonth() + 1}${month}${date.getDate()}${day} ${time}`
+              : `${date.getMonth() + 1}${month}${date.getDate()}${day}${date.getFullYear()} ${time}`;
             return (
-              <div class={styles.historyItem} key={session.id}>
+              <div class={styles.historyItem} key={session.id} data-testid="breath-history-item">
                 <span>
                   {session.completed ? `✓ ${i18n.breath.completed}` : i18n.breath.interrupted} ({session.pattern})
                 </span>
