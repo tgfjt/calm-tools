@@ -36,7 +36,7 @@ export interface Translations {
       exhale: string;
       complete: string;
     };
-    remaining: string;
+    remainingFormat: string;
     start: string;
     reset: string;
     history: string;
@@ -44,6 +44,11 @@ export interface Translations {
     stats: string;
     completed: string;
     interrupted: string;
+    dateFormat: {
+      year: string;
+      month: string;
+      day: string;
+    };
   };
   grounding: {
     title: string;
@@ -102,6 +107,9 @@ export interface Translations {
     };
     accessibilityLabels: {
       inputLabel: string;
+    };
+    validation: {
+      atLeastOne: string;
     };
   };
 }
