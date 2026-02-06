@@ -12,17 +12,17 @@ test.describe('i18n - Japanese locale', () => {
     await page.goto('/');
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'ja');
-    await expect(page.getByText('心を落ち着けるためのツール')).toBeVisible();
-    await expect(page.getByText('深呼吸')).toBeVisible();
-    await expect(page.getByText('グラウンディング')).toBeVisible();
+    await expect(page.getByText('心をしずかに整える道具箱')).toBeVisible();
+    await expect(page.getByText('呼吸', { exact: true })).toBeVisible();
+    await expect(page.getByText('54321', { exact: true }).first()).toBeVisible();
   });
 
   test('breath page shows Japanese text', async ({ page }) => {
     await page.goto('/breath');
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'ja');
-    await expect(page.getByText('準備ができたら開始')).toBeVisible();
-    await expect(page.getByRole('button', { name: '開始' })).toBeVisible();
+    await expect(page.getByText('準備ができたら、はじめましょう')).toBeVisible();
+    await expect(page.locator('[data-testid="breath-start-btn"]')).toHaveText('はじめる');
   });
 
   test('grounding page shows Japanese text', async ({ page }) => {
@@ -30,7 +30,7 @@ test.describe('i18n - Japanese locale', () => {
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'ja');
     await expect(page.getByText('グラウンディング')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'はじめる' })).toBeVisible();
+    await expect(page.locator('[data-testid="grounding-start-btn"]')).toHaveText('はじめる');
   });
 });
 
@@ -46,17 +46,17 @@ test.describe('i18n - English locale', () => {
     await page.goto('/');
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    await expect(page.getByText('Tools to calm your mind')).toBeVisible();
-    await expect(page.getByText('Deep Breathing')).toBeVisible();
-    await expect(page.getByText('Grounding')).toBeVisible();
+    await expect(page.getByText('A quiet space for your mind')).toBeVisible();
+    await expect(page.getByText('Breathe', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('54321', { exact: true }).first()).toBeVisible();
   });
 
   test('breath page shows English text', async ({ page }) => {
     await page.goto('/breath');
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-    await expect(page.getByText('Ready when you are')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
+    await expect(page.getByText("Whenever you're ready")).toBeVisible();
+    await expect(page.locator('[data-testid="breath-start-btn"]')).toHaveText('Begin');
   });
 
   test('grounding page shows English text', async ({ page }) => {
@@ -64,6 +64,6 @@ test.describe('i18n - English locale', () => {
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'en');
     await expect(page.getByText('Grounding')).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Start' })).toBeVisible();
+    await expect(page.locator('[data-testid="grounding-start-btn"]')).toHaveText('Begin');
   });
 });
