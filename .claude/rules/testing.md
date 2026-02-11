@@ -9,15 +9,14 @@
 すべてのテストは **Arrange-Act-Assert** で構成する。コメントで明示すること。
 
 ```typescript
-test('説明', async ({ page }) => {
-  // Arrange — 前提条件のセットアップ
-  const breathPage = new BreathPage(page);
+test('説明', async ({ breathPage }) => {
+  // Arrange
   await breathPage.goto();
 
-  // Act — テスト対象の操作
+  // Act
   await breathPage.start();
 
-  // Assert — 期待結果の検証
+  // Assert
   await expect(breathPage.instruction).toContainText('吸って');
 });
 ```
@@ -39,17 +38,48 @@ test('説明', async ({ page }) => {
 
 テストから直接ロケータを書かない。必ず POM 経由にする。
 
+### 構成
+
+- POM は **factory 関数**で定義する（Class は使わない）
+- `tests/fixtures.ts` で Playwright の `test` を extend して fixture として提供
+- テストでは `{ breathPage }` のように destructure して使う
+
+```typescript
+// tests/pages/BreathPage.ts — factory 関数
+export function breathPage(page: Page) {
+  const startBtn = page.locator('[data-testid="breath-start-btn"]');
+  return {
+    startBtn,
+    goto: async () => { ... },
+    start: () => startBtn.click(),
+  };
+}
+
+// tests/fixtures.ts — fixture 定義
+export const test = base.extend<Fixtures>({
+  breathPage: async ({ page }, use) => {
+    await use(breathPage(page));
+  },
+});
+
+// tests/e2e/breath.spec.ts — テストで使う
+import { test, expect } from '../fixtures';
+test('開始', async ({ breathPage }) => { ... });
+```
+
 ### ファイル
 
-- `tests/pages/HomePage.ts`
-- `tests/pages/BreathPage.ts`
-- `tests/pages/GroundingPage.ts`
+- `tests/pages/HomePage.ts` — `homePage(page)`
+- `tests/pages/BreathPage.ts` — `breathPage(page)`
+- `tests/pages/GroundingPage.ts` — `groundingPage(page)`
+- `tests/fixtures.ts` — fixture 定義 + `test`, `expect` の re-export
 
 ### 規約
 
 - `goto()` で `waitForLoadState('networkidle')` を必ず呼ぶ (Preact hydration 対策)
 - ロケータは `data-testid` ベースを優先。セマンティック (`getByRole`) は補助的に使う
 - アクションメソッドを提供する (`start()`, `fillStep()`, `cancelSession()` 等)
+- E2E テストの import は `from '../fixtures'` に統一（`@playwright/test` から直接 import しない）
 
 ---
 

@@ -1,5 +1,4 @@
-import { test, expect } from '@playwright/test';
-import { GroundingPage } from '../pages/GroundingPage';
+import { test, expect } from '../fixtures';
 
 test.describe('Grounding App', () => {
   test.use({
@@ -7,96 +6,88 @@ test.describe('Grounding App', () => {
     extraHTTPHeaders: { 'Accept-Language': 'ja' },
   });
 
-  test('スタート画面にはじめるボタンと履歴ボタンが表示される', async ({ page }) => {
-    // Arrange
-    const grounding = new GroundingPage(page);
-
-    // Act
-    await grounding.goto();
+  test('スタート画面にはじめるボタンと履歴ボタンが表示される', async ({ groundingPage }) => {
+    // Arrange & Act
+    await groundingPage.goto();
 
     // Assert
-    await expect(grounding.startBtn).toBeVisible();
-    await expect(grounding.startBtn).toHaveText('はじめる');
-    await expect(grounding.historyBtn).toBeVisible();
-    await expect(grounding.historyBtn).toHaveText('履歴を見る');
+    await expect(groundingPage.startBtn).toBeVisible();
+    await expect(groundingPage.startBtn).toHaveText('はじめる');
+    await expect(groundingPage.historyBtn).toBeVisible();
+    await expect(groundingPage.historyBtn).toHaveText('履歴を見る');
   });
 
-  test('5ステップ完走で完了画面が表示される', async ({ page }) => {
+  test('5ステップ完走で完了画面が表示される', async ({ groundingPage, page }) => {
     // Arrange
-    const grounding = new GroundingPage(page);
-    await grounding.goto();
+    await groundingPage.goto();
 
     // Act
-    await grounding.startSession();
-    await grounding.completeAllSteps();
+    await groundingPage.startSession();
+    await groundingPage.completeAllSteps();
 
     // Assert
-    await expect(grounding.completeScreen).toBeVisible();
+    await expect(groundingPage.completeScreen).toBeVisible();
     await expect(page.getByText('おつかれさまでした')).toBeVisible();
-    await expect(grounding.finishBtn).toBeVisible();
+    await expect(groundingPage.finishBtn).toBeVisible();
   });
 
-  test('空入力で次へを押すとバリデーションエラーが表示される', async ({ page }) => {
+  test('空入力で次へを押すとバリデーションエラーが表示される', async ({ groundingPage }) => {
     // Arrange
-    const grounding = new GroundingPage(page);
-    await grounding.goto();
-    await grounding.startSession();
+    await groundingPage.goto();
+    await groundingPage.startSession();
 
     // Act
-    await grounding.nextStep();
+    await groundingPage.nextStep();
 
     // Assert
-    await expect(grounding.validationError).toBeVisible();
-    await expect(grounding.validationError).toHaveAttribute('role', 'alert');
+    await expect(groundingPage.validationError).toBeVisible();
+    await expect(groundingPage.validationError).toHaveAttribute('role', 'alert');
   });
 
-  test('途中でやめるを押すとスタート画面に戻る', async ({ page }) => {
+  test('途中でやめるを押すとスタート画面に戻る', async ({ groundingPage }) => {
     // Arrange
-    const grounding = new GroundingPage(page);
-    await grounding.goto();
-    await grounding.startSession();
-    await grounding.fillStep('sight', 5);
+    await groundingPage.goto();
+    await groundingPage.startSession();
+    await groundingPage.fillStep('sight', 5);
 
     // Act
-    await grounding.cancelSession();
+    await groundingPage.cancelSession();
 
     // Assert
-    await expect(grounding.startBtn).toBeVisible();
-    await expect(grounding.stepForm).not.toBeVisible();
+    await expect(groundingPage.startBtn).toBeVisible();
+    await expect(groundingPage.stepForm).not.toBeVisible();
   });
 
-  test('履歴ボタンで履歴画面を表示し戻るボタンでスタート画面に戻る', async ({ page }) => {
+  test('履歴ボタンで履歴画面を表示し戻るボタンでスタート画面に戻る', async ({ groundingPage }) => {
     // Arrange
-    const grounding = new GroundingPage(page);
-    await grounding.goto();
+    await groundingPage.goto();
 
     // Act - 履歴画面へ
-    await grounding.goToHistory();
+    await groundingPage.goToHistory();
 
     // Assert - 履歴画面が表示される
-    await expect(grounding.historyScreen).toBeVisible();
-    await expect(grounding.backBtn).toBeVisible();
+    await expect(groundingPage.historyScreen).toBeVisible();
+    await expect(groundingPage.backBtn).toBeVisible();
 
     // Act - 戻る
-    await grounding.backBtn.click();
+    await groundingPage.backBtn.click();
 
     // Assert - スタート画面に戻る
-    await expect(grounding.startBtn).toBeVisible();
-    await expect(grounding.historyScreen).not.toBeVisible();
+    await expect(groundingPage.startBtn).toBeVisible();
+    await expect(groundingPage.historyScreen).not.toBeVisible();
   });
 
-  test('完了後おわるボタンでスタート画面に戻る', async ({ page }) => {
+  test('完了後おわるボタンでスタート画面に戻る', async ({ groundingPage }) => {
     // Arrange
-    const grounding = new GroundingPage(page);
-    await grounding.goto();
-    await grounding.startSession();
-    await grounding.completeAllSteps();
+    await groundingPage.goto();
+    await groundingPage.startSession();
+    await groundingPage.completeAllSteps();
 
     // Act
-    await grounding.finishBtn.click();
+    await groundingPage.finishBtn.click();
 
     // Assert
-    await expect(grounding.startBtn).toBeVisible();
-    await expect(grounding.completeScreen).not.toBeVisible();
+    await expect(groundingPage.startBtn).toBeVisible();
+    await expect(groundingPage.completeScreen).not.toBeVisible();
   });
 });
