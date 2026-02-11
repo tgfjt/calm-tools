@@ -8,11 +8,10 @@ on:
 
 env:
   NODE_VERSION: 22
-  RUNNER_OS: ubuntu-latest
 
 jobs:
   unit:
-    runs-on: ${{ env.RUNNER_OS }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -23,7 +22,7 @@ jobs:
       - run: npm run test:unit
 
   e2e:
-    runs-on: ${{ env.RUNNER_OS }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
