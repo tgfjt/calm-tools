@@ -33,7 +33,7 @@ test.describe('Breath App', () => {
     await breathPage.goto();
 
     // Assert
-    await expect(page.getByText('準備ができたら開始')).toBeVisible();
+    await expect(breathPage.instruction).toContainText('準備ができたら開始');
     await expect(breathPage.timer).toContainText('残り 1:00');
   });
 
@@ -101,7 +101,7 @@ test.describe('Breath App', () => {
     await breathPage.start();
 
     // Assert - phase text should change to "吸って"
-    await expect(page.getByText('吸って')).toBeVisible({ timeout: 3000 });
+    await expect(breathPage.instruction).toContainText('吸って', { timeout: 3000 });
   });
 
   test('リセット: 実行中にリセットで idle に戻る', async ({ page }) => {
@@ -109,13 +109,13 @@ test.describe('Breath App', () => {
     const breathPage = new BreathPage(page);
     await breathPage.goto();
     await breathPage.start();
-    await expect(page.getByText('吸って')).toBeVisible({ timeout: 3000 });
+    await expect(breathPage.instruction).toContainText('吸って', { timeout: 3000 });
 
     // Act
     await breathPage.reset();
 
     // Assert
-    await expect(page.getByText('準備ができたら開始')).toBeVisible();
+    await expect(breathPage.instruction).toContainText('準備ができたら開始');
     await expect(breathPage.timer).toContainText('残り 1:00');
   });
 
@@ -126,7 +126,7 @@ test.describe('Breath App', () => {
 
     // Act
     await breathPage.start();
-    await expect(page.getByText('吸って')).toBeVisible({ timeout: 3000 });
+    await expect(breathPage.instruction).toContainText('吸って', { timeout: 3000 });
 
     // Assert
     await expect(breathPage.pattern555Btn).toBeDisabled();
@@ -143,7 +143,7 @@ test.describe('Breath App', () => {
 
     // Act
     await breathPage.start();
-    await expect(page.getByText('吸って')).toBeVisible({ timeout: 3000 });
+    await expect(breathPage.instruction).toContainText('吸って', { timeout: 3000 });
 
     // Assert
     await expect(breathPage.startBtn).toBeDisabled();
@@ -170,7 +170,7 @@ test.describe('Breath App', () => {
     await breathPage.start();
 
     // Assert - wait for inhale (5s) then hold phase
-    await expect(page.getByText('吸って')).toBeVisible({ timeout: 3000 });
-    await expect(page.getByText('止めて')).toBeVisible({ timeout: 8000 });
+    await expect(breathPage.instruction).toContainText('吸って', { timeout: 3000 });
+    await expect(breathPage.instruction).toContainText('止めて', { timeout: 8000 });
   });
 });

@@ -397,16 +397,17 @@ export default function BreathApp({ locale }: Props) {
   );
 
   return (
-    <div class={styles.container}>
+    <div class={styles.container} data-testid="breath-app">
       <h1 class={styles.title}>{i18n.breath.title}</h1>
 
-      <div class={styles.patternSelection}>
+      <div class={styles.patternSelection} data-testid="breath-pattern-selection">
         {(['555', '478'] as Pattern[]).map((p) => (
           <button
             key={p}
             class={`${styles.patternBtn} ${selectedPattern.value === p ? styles.patternBtnSelected : ''}`}
             onClick={() => selectPattern(p)}
             disabled={isRunning.value}
+            data-testid={`breath-pattern-${p}`}
           >
             <div class={styles.patternName}>{i18n.breath.patterns[p].name}</div>
             <div class={styles.patternDesc}>{i18n.breath.patterns[p].desc}</div>
@@ -414,41 +415,42 @@ export default function BreathApp({ locale }: Props) {
         ))}
       </div>
 
-      <div class={styles.durationSelection}>
+      <div class={styles.durationSelection} data-testid="breath-duration-selection">
         {durationValues.map((d) => (
           <button
             key={d}
             class={`${styles.durationBtn} ${selectedDuration.value === d ? styles.durationBtnSelected : ''}`}
             onClick={() => selectDuration(d)}
             disabled={isRunning.value}
+            data-testid={`breath-duration-${d}`}
           >
             {i18n.breath.durations[String(d) as '60' | '180' | '300']}
           </button>
         ))}
       </div>
 
-      <div class={styles.breathCircle}>
+      <div class={styles.breathCircle} data-testid="breath-circle">
         <div class={`${styles.circle} circle ${circleClass.value}`} />
         <div class={styles.circleContent}>
-          <div class={styles.phaseCountdown}>
+          <div class={styles.phaseCountdown} data-testid="breath-phase-countdown">
             {phaseCountdown.value > 0 ? phaseCountdown.value : ''}
           </div>
-          <div class={styles.instruction}>{instruction.value}</div>
+          <div class={styles.instruction} data-testid="breath-instruction">{instruction.value}</div>
         </div>
       </div>
 
-      <div class={styles.timer}>{formatTime(remainingTime.value)}</div>
+      <div class={styles.timer} data-testid="breath-timer">{formatTime(remainingTime.value)}</div>
 
-      <div class={styles.controls}>
-        <button class={styles.controlBtn} onClick={start} disabled={isRunning.value}>
+      <div class={styles.controls} data-testid="breath-controls">
+        <button class={styles.controlBtn} onClick={start} disabled={isRunning.value} data-testid="breath-start-btn">
           {i18n.breath.start}
         </button>
-        <button class={styles.controlBtn} onClick={reset} disabled={!isRunning.value && phase.value === 'idle'}>
+        <button class={styles.controlBtn} onClick={reset} disabled={!isRunning.value && phase.value === 'idle'} data-testid="breath-reset-btn">
           {i18n.breath.reset}
         </button>
       </div>
 
-      <div class={styles.history}>
+      <div class={styles.history} data-testid="breath-history">
         <h2 class={styles.historyTitle}>{i18n.breath.history}</h2>
         <div class={styles.stats}>
           {history.value.length === 0

@@ -2,6 +2,7 @@ import { type Page, type Locator } from '@playwright/test';
 
 export class BreathPage {
   readonly page: Page;
+  readonly app: Locator;
   readonly title: Locator;
   readonly pattern555Btn: Locator;
   readonly pattern478Btn: Locator;
@@ -18,18 +19,18 @@ export class BreathPage {
 
   constructor(page: Page) {
     this.page = page;
-    // Japanese locale text (default)
+    this.app = page.locator('[data-testid="breath-app"]');
     this.title = page.getByRole('heading', { name: '深呼吸', level: 1 });
-    this.pattern555Btn = page.getByRole('button', { name: /5-5-5/ });
-    this.pattern478Btn = page.getByRole('button', { name: /4-7-8/ });
-    this.duration1minBtn = page.getByRole('button', { name: '1分' });
-    this.duration3minBtn = page.getByRole('button', { name: '3分' });
-    this.duration5minBtn = page.getByRole('button', { name: '5分' });
-    this.startBtn = page.getByRole('button', { name: '開始' });
-    this.resetBtn = page.getByRole('button', { name: 'リセット' });
-    this.instruction = page.getByText(/^(準備ができたら開始|吸って|止めて|吐いて|完了しました)$/);
-    this.phaseCountdown = page.locator('div').filter({ hasText: /^\d$/ }).first();
-    this.timer = page.getByText(/残り \d+:\d+/);
+    this.pattern555Btn = page.locator('[data-testid="breath-pattern-555"]');
+    this.pattern478Btn = page.locator('[data-testid="breath-pattern-478"]');
+    this.duration1minBtn = page.locator('[data-testid="breath-duration-60"]');
+    this.duration3minBtn = page.locator('[data-testid="breath-duration-180"]');
+    this.duration5minBtn = page.locator('[data-testid="breath-duration-300"]');
+    this.startBtn = page.locator('[data-testid="breath-start-btn"]');
+    this.resetBtn = page.locator('[data-testid="breath-reset-btn"]');
+    this.instruction = page.locator('[data-testid="breath-instruction"]');
+    this.phaseCountdown = page.locator('[data-testid="breath-phase-countdown"]');
+    this.timer = page.locator('[data-testid="breath-timer"]');
     this.historyTitle = page.getByRole('heading', { name: '履歴' });
     this.noRecordsText = page.getByText('まだ記録がありません');
   }
@@ -48,7 +49,8 @@ export class BreathPage {
   }
 
   async selectDuration(duration: '1分' | '3分' | '5分') {
-    await this.page.getByRole('button', { name: duration }).click();
+    const map = { '1分': '60', '3分': '180', '5分': '300' };
+    await this.page.locator(`[data-testid="breath-duration-${map[duration]}"]`).click();
   }
 
   async start() {
