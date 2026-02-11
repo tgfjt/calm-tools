@@ -79,7 +79,6 @@ const styles = {
   }),
   patternDesc: css({
     fontSize: '0.85rem',
-    opacity: 0.7,
     letterSpacing: '0.05em',
     lineHeight: 1.4,
     whiteSpace: 'pre-line',
@@ -202,7 +201,6 @@ const styles = {
   }),
   stats: css({
     fontSize: '0.9rem',
-    opacity: 0.7,
     color: token('colors.breath.textAlt'),
     marginBottom: '1rem',
   }),

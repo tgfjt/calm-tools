@@ -49,7 +49,7 @@ export default defineConfig({
           grounding: {
             bg: { value: "#faf8f5" },
             text: { value: "#5a5a5a" },
-            textLight: { value: "#8a8a8a" },
+            textLight: { value: "#707070" },
             pink: { value: "#c8b8a8" },
             blue: { value: "rgba(200, 184, 168, 0.2)" },
             purple: { value: "#c8b8a8" },
