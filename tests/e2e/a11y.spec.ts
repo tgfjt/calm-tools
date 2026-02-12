@@ -14,7 +14,6 @@ test.describe('Accessibility', () => {
 
     // Act
     const results = await new AxeBuilder({ page })
-      .disableRules(['color-contrast'])
       .analyze();
 
     // Assert
@@ -32,7 +31,6 @@ test.describe('Accessibility', () => {
 
     // Act
     const results = await new AxeBuilder({ page })
-      .disableRules(['color-contrast'])
       .analyze();
 
     // Assert
@@ -50,7 +48,6 @@ test.describe('Accessibility', () => {
 
     // Act
     const results = await new AxeBuilder({ page })
-      .disableRules(['color-contrast'])
       .analyze();
 
     // Assert
@@ -71,7 +68,6 @@ test.describe('Accessibility', () => {
 
     // Assert
     const results = await new AxeBuilder({ page })
-      .disableRules(['color-contrast'])
       .analyze();
     expect(
       results.violations.filter(
