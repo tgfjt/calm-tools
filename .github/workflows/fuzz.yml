@@ -32,7 +32,7 @@ jobs:
       - name: Build & Start server
         run: |
           npm run build
-          npm run preview &
+          npx wrangler pages dev dist/ --port 4321 &
           npx wait-on http://localhost:4321 --timeout 30000
 
       - name: Run web-fuzz
