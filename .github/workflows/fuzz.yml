@@ -29,10 +29,9 @@ jobs:
           path: ~/.cache/deno
           key: deno-${{ runner.os }}-web-fuzz
 
-      - name: Build & Start server
+      - name: Start dev server
         run: |
-          npm run build
-          npx wrangler pages dev dist/ --port 4321 &
+          npm run dev &
           npx wait-on http://localhost:4321 --timeout 30000
 
       - name: Run web-fuzz
