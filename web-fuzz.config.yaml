@@ -1,0 +1,70 @@
+# web-fuzz.config.yaml
+#
+# 実行:
+#   deno run -A https://raw.githubusercontent.com/tgfjt/web-fuzz/main/src/index.ts
+#
+# 初回のみ: npx playwright install chromium
+
+baseUrl: http://localhost:4321
+
+# 実行設定
+numRuns: 50              # デフォルトの試行回数
+timeout: 5000            # 各操作のタイムアウト(ms)
+headless: true           # ヘッドレスモード
+
+# 認証不要（データは全てブラウザのIndexedDBに保存、サーバーサイドなし）
+
+# チェック対象パス
+paths:
+  include:
+    - /
+    - /breath
+    - /grounding
+  exclude: []
+
+# フォームファジング対象
+forms:
+  - path: /grounding
+    selector: '[data-testid="grounding-step-form"]'
+    submit: '[data-testid="grounding-next-btn"]'
+    setup:
+      - click: '[data-testid="grounding-start-btn"]'
+      - waitFor: '[data-testid="grounding-step-form"]'
+
+# ボタン連打チェック対象
+# Breath: 開始/リセット + パターン選択 + 時間選択
+# Grounding: 各画面のボタン（confirm ダイアログが出るものも含む）
+buttons:
+  - path: /breath
+    selector: '[data-testid="breath-start-btn"]'
+  - path: /breath
+    selector: '[data-testid="breath-reset-btn"]'
+  - path: /breath
+    selector: '[data-testid="breath-pattern-555"]'
+  - path: /breath
+    selector: '[data-testid="breath-pattern-478"]'
+  - path: /breath
+    selector: '[data-testid="breath-duration-60"]'
+  - path: /breath
+    selector: '[data-testid="breath-duration-180"]'
+  - path: /grounding
+    selector: '[data-testid="grounding-start-btn"]'
+  - path: /grounding
+    selector: '[data-testid="grounding-history-btn"]'
+
+# 有効にするチェック
+checks:
+  noServerError: true
+  formFuzzing: true
+  historyNavigation: true
+  rapidClick: true
+  queryParamFuzzing: true
+  reloadStateRestore: true
+
+# チェックごとの設定
+checkOptions:
+  rapidClick:
+    maxClicks: 10
+
+# レポート
+reporter: console        # console | json | html

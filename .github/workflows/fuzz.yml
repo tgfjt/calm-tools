@@ -1,0 +1,50 @@
+name: Fuzz
+
+on:
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: 22
+
+jobs:
+  fuzz:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Cache Deno dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/deno
+          key: deno-${{ runner.os }}-web-fuzz
+
+      - name: Build & Start server
+        run: |
+          npm run build
+          npm run preview &
+          npx wait-on http://localhost:4321 --timeout 30000
+
+      - name: Run web-fuzz
+        run: >
+          deno run -A
+          https://raw.githubusercontent.com/tgfjt/web-fuzz/main/src/index.ts
+          --seed 12345
+          --reporter json > fuzz-report.json
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: fuzz-report
+          path: fuzz-report.json
