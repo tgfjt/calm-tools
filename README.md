@@ -1,6 +1,7 @@
 # calm
 
 [![Tests](https://github.com/tgfjt/calm-tools/actions/workflows/e2e.yml/badge.svg)](https://github.com/tgfjt/calm-tools/actions/workflows/e2e.yml)
+[![Fuzz](https://github.com/tgfjt/calm-tools/actions/workflows/fuzz.yml/badge.svg)](https://github.com/tgfjt/calm-tools/actions/workflows/fuzz.yml)
 
 心を落ち着けるためのウェルネスツール集
 
