@@ -91,14 +91,13 @@ const styles = {
   durationBtn: css({
     background: token('colors.breath.surface'),
     border: `1px solid ${token('colors.breath.borderWeak')}`,
-    color: token('colors.breath.textAlt'),
+    color: token('colors.breath.muted'),
     padding: '0.5rem 1rem',
     borderRadius: '20px',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     fontSize: '0.9rem',
     _hover: {
-      color: token('colors.breath.muted'),
       background: token('colors.breath.surfaceMedium'),
     },
     _disabled: {
@@ -106,7 +105,6 @@ const styles = {
     },
   }),
   durationBtnSelected: css({
-    color: token('colors.breath.muted'),
     background: token('colors.breath.surfaceStrong'),
     borderColor: token('colors.breath.borderStrong'),
   }),
