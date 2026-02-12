@@ -38,7 +38,6 @@ const styles = {
     fontWeight: 200,
     marginBottom: '2rem',
     letterSpacing: '0.3em',
-    opacity: 0.9,
     color: token('colors.breath.muted'),
   }),
   patternSelection: css({
@@ -92,15 +91,14 @@ const styles = {
   durationBtn: css({
     background: token('colors.breath.surface'),
     border: `1px solid ${token('colors.breath.borderWeak')}`,
-    color: token('colors.breath.muted'),
+    color: token('colors.breath.textAlt'),
     padding: '0.5rem 1rem',
     borderRadius: '20px',
     cursor: 'pointer',
     transition: 'all 0.3s ease',
     fontSize: '0.9rem',
-    opacity: 0.7,
     _hover: {
-      opacity: 1,
+      color: token('colors.breath.muted'),
       background: token('colors.breath.surfaceMedium'),
     },
     _disabled: {
@@ -108,7 +106,7 @@ const styles = {
     },
   }),
   durationBtnSelected: css({
-    opacity: 1,
+    color: token('colors.breath.muted'),
     background: token('colors.breath.surfaceStrong'),
     borderColor: token('colors.breath.borderStrong'),
   }),
@@ -158,8 +156,7 @@ const styles = {
     fontWeight: 300,
     marginBottom: '2rem',
     fontVariantNumeric: 'tabular-nums',
-    color: token('colors.breath.muted'),
-    opacity: 0.6,
+    color: token('colors.breath.textAlt'),
   }),
   controls: css({
     display: 'flex',
@@ -196,7 +193,6 @@ const styles = {
     fontWeight: 300,
     marginBottom: '1.5rem',
     letterSpacing: '0.2em',
-    opacity: 0.8,
     color: token('colors.breath.muted'),
   }),
   stats: css({
@@ -224,8 +220,8 @@ const styles = {
     color: token('colors.breath.textAlt'),
   }),
   historyDate: css({
-    opacity: 0.7,
     fontSize: '0.85rem',
+    color: token('colors.breath.textAlt'),
   }),
 };
 
