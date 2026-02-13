@@ -1,0 +1,12 @@
+{
+  "NOTE": "This MCP server uses HTTP transport for MCP Apps support.",
+  "NOTE2": "Add via Settings > Connectors > Add custom connector",
+  "steps": [
+    "1. npm run build && npm run serve",
+    "2. npm run tunnel (in another terminal)",
+    "3. Copy the cloudflared URL (e.g., https://xxx.trycloudflare.com)",
+    "4. In Claude: Settings > Connectors > Add custom connector",
+    "5. Paste the tunnel URL"
+  ],
+  "localUrl": "http://localhost:3001/mcp"
+}
