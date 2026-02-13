@@ -405,6 +405,191 @@ export default function GroundingApp({ locale }: Props) {
     return `${date.getMonth() + 1}${month}${date.getDate()}${day}${date.getFullYear()} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
   };
 
+  // WebMCP: register tools based on current screen
+  useEffect(() => {
+    if (!('modelContext' in navigator)) return;
+
+    const mc = navigator.modelContext!;
+
+    const textResult = (text: string): WebMCPToolResult => ({
+      content: [{ type: 'text', text }],
+    });
+
+    const interact = <T,>(
+      agent: WebMCPAgent | undefined,
+      cb: () => T | Promise<T>,
+    ): T | Promise<T> => (agent ? agent.requestUserInteraction(cb) : cb());
+
+    const startTool: WebMCPTool = {
+      name: 'start-grounding-session',
+      description:
+        'Start a new 5-4-3-2-1 grounding exercise session. The exercise guides through 5 senses: sight (5 items), touch (4), sound (3), smell (2), taste (1).',
+      inputSchema: { type: 'object', properties: {} },
+      execute: (_params, agent) =>
+        interact(agent, () => {
+          startSession();
+          return textResult(
+            'Grounding session started. Current step: sight (5 items). Use submit-grounding-step to provide responses.',
+          );
+        }),
+    };
+
+    const submitStepTool: WebMCPTool = {
+      name: 'submit-grounding-step',
+      description:
+        'Submit responses for the current grounding step. Each step requires a specific number of text responses matching the sense category.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          responses: {
+            type: 'array',
+            items: { type: 'string' },
+            description:
+              'Array of text responses for the current step. Must match the required count: sight=5, touch=4, sound=3, smell=2, taste=1.',
+          },
+        },
+        required: ['responses'],
+      },
+      execute: (params, agent) =>
+        interact(agent, async () => {
+          const values = params.responses as string[];
+          const step = stepConfigs[currentStep.value];
+          const stepTrans = i18n.grounding.steps[step.category];
+
+          if (values.length !== step.count) {
+            return textResult(
+              `Error: Expected ${step.count} responses for "${step.category}", got ${values.length}.`,
+            );
+          }
+
+          const result = stepResponseSchema.safeParse(values);
+          if (!result.success) {
+            return textResult(`Validation error: ${result.error.issues[0].message}`);
+          }
+
+          responses.value = [
+            ...responses.value,
+            {
+              step: currentStep.value,
+              category: step.category,
+              title: stepTrans.title,
+              data: values,
+            },
+          ];
+
+          if (currentStep.value < stepConfigs.length - 1) {
+            currentStep.value++;
+            const next = stepConfigs[currentStep.value];
+            return textResult(
+              `Step "${step.category}" completed. Next: "${next.category}" (${next.count} items).`,
+            );
+          }
+
+          await saveGroundingSession({
+            timestamp: new Date().toISOString(),
+            responses: responses.value,
+          });
+          await loadHistory();
+          screen.value = 'complete';
+          return textResult('All steps completed! Grounding session saved.');
+        }),
+    };
+
+    const getStatusTool: WebMCPTool = {
+      name: 'get-grounding-status',
+      description: 'Get the current state of the grounding exercise.',
+      inputSchema: { type: 'object', properties: {} },
+      execute: () => {
+        const step = stepConfigs[currentStep.value];
+        return textResult(
+          JSON.stringify({
+            screen: screen.value,
+            currentStep: currentStep.value,
+            category: step.category,
+            requiredCount: step.count,
+            completedSteps: responses.value.length,
+            totalSteps: stepConfigs.length,
+          }),
+        );
+      },
+    };
+
+    const getHistoryTool: WebMCPTool = {
+      name: 'get-grounding-history',
+      description: 'Retrieve all past grounding exercise sessions from IndexedDB.',
+      inputSchema: { type: 'object', properties: {} },
+      execute: async () => {
+        const sessions = await getGroundingSessions();
+        return textResult(JSON.stringify(sessions));
+      },
+    };
+
+    const cancelTool: WebMCPTool = {
+      name: 'cancel-grounding-session',
+      description: 'Cancel the current grounding session and return to the start screen.',
+      inputSchema: { type: 'object', properties: {} },
+      execute: (_params, agent) =>
+        interact(agent, () => {
+          screen.value = 'start';
+          return textResult('Session cancelled. Returned to start screen.');
+        }),
+    };
+
+    const finishTool: WebMCPTool = {
+      name: 'finish-grounding',
+      description: 'Dismiss the completion screen and return to start.',
+      inputSchema: { type: 'object', properties: {} },
+      execute: (_params, agent) =>
+        interact(agent, () => {
+          screen.value = 'start';
+          return textResult('Returned to start screen.');
+        }),
+    };
+
+    const deleteSessionTool: WebMCPTool = {
+      name: 'delete-grounding-session',
+      description: 'Delete a grounding session from history by its ID.',
+      inputSchema: {
+        type: 'object',
+        properties: {
+          sessionId: {
+            type: 'number',
+            description: 'The ID of the session to delete.',
+          },
+        },
+        required: ['sessionId'],
+      },
+      execute: (params, agent) => {
+        const id = params.sessionId as number;
+        return interact(agent, async () => {
+          await deleteGroundingSession(id);
+          await loadHistory();
+          return textResult(`Session ${id} deleted.`);
+        });
+      },
+    };
+
+    const backToStartTool: WebMCPTool = {
+      name: 'back-to-start',
+      description: 'Navigate from the history screen back to start.',
+      inputSchema: { type: 'object', properties: {} },
+      execute: (_params, agent) =>
+        interact(agent, () => {
+          screen.value = 'start';
+          return textResult('Returned to start screen.');
+        }),
+    };
+
+    const toolsByScreen: Record<Screen, WebMCPTool[]> = {
+      start: [startTool, getHistoryTool],
+      step: [submitStepTool, getStatusTool, cancelTool],
+      complete: [finishTool, getHistoryTool],
+      history: [getHistoryTool, deleteSessionTool, backToStartTool],
+    };
+
+    mc.provideContext({ tools: toolsByScreen[screen.value] });
+  }, [screen.value]);
+
   const stepConfig = stepConfigs[currentStep.value];
   const stepI18n = i18n.grounding.steps[stepConfig.category];
 
