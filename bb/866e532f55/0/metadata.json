@@ -1,0 +1,31 @@
+{
+  "cli_version": "0.4.3",
+  "checkpoint_id": "bb866e532f55",
+  "session_id": "897258cc-a2d3-4575-b41b-ff72004c364c",
+  "strategy": "manual-commit",
+  "created_at": "2026-02-16T12:27:15.500008Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/e2e/i18n.spec.ts"
+  ],
+  "agent": "Claude Code",
+  "transcript_identifier_at_start": "34e8c112-aa3d-4eb7-b865-16ba08edbff2",
+  "token_usage": {
+    "input_tokens": 1462,
+    "cache_creation_tokens": 336247,
+    "cache_read_tokens": 12899466,
+    "output_tokens": 19249,
+    "api_call_count": 120
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-02-16T12:27:14.983463Z",
+    "agent_lines": 26,
+    "human_added": 83,
+    "human_modified": 4,
+    "human_removed": 0,
+    "total_committed": 113,
+    "agent_percentage": 23.008849557522122
+  },
+  "transcript_path": ".claude/projects/-Users-tgfjt-ghq-github-com-tgfjt-calm-tools/897258cc-a2d3-4575-b41b-ff72004c364c.jsonl"
+}

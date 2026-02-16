@@ -1,0 +1,26 @@
+{
+  "cli_version": "0.4.3",
+  "checkpoint_id": "bb866e532f55",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/e2e/i18n.spec.ts"
+  ],
+  "sessions": [
+    {
+      "metadata": "/bb/866e532f55/0/metadata.json",
+      "transcript": "/bb/866e532f55/0/full.jsonl",
+      "context": "/bb/866e532f55/0/context.md",
+      "content_hash": "/bb/866e532f55/0/content_hash.txt",
+      "prompt": "/bb/866e532f55/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 1462,
+    "cache_creation_tokens": 336247,
+    "cache_read_tokens": 12899466,
+    "output_tokens": 19249,
+    "api_call_count": 120
+  }
+}
