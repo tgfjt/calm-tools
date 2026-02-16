@@ -91,7 +91,7 @@ const styles = {
   }),
   btnPrimary: css({
     background: token('gradients.groundingBtn'),
-    color: '#3a3530',
+    color: '#1a1510',
   }),
   btnSecondary: css({
     background: 'white',
